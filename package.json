@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "eslint": "./node_modules/.bin/eslint" 
+    "eslint": "./node_modules/.bin/eslint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nami-serverless/nami.git"
+  },
+  "bin": {
+    "nami": "./bin/cli.js"
   },
   "keywords": [
     "lambda",
