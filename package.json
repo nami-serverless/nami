@@ -1,0 +1,43 @@
+{
+  "name": "nami",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "eslint": "./node_modules/.bin/eslint" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nami-serverless/nami.git"
+  },
+  "keywords": [
+    "lambda",
+    "aws",
+    "amazon",
+    "web",
+    "services",
+    "api",
+    "apigateway",
+    "serverless",
+    "faas",
+    "nami"
+  ],
+  "author": "nami-serverless",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nami-serverless/nami/issues"
+  },
+  "homepage": "https://github.com/nami-serverless/nami#readme",
+  "dependencies": {
+    "aws-sdk": "^2.430.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.5.0"
+  }
+}
