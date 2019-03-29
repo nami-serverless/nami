@@ -1,13 +1,13 @@
-const deployPreLambda = require('../aws/deployPreLambda');
+// const deployPreLambda = require('../aws/deployPreLambda');
 // const deployPostLambda = require('../aws/deployPostLambda');
-const deployApi = require('../aws/deployApi');
+// const deployApi = require('../aws/deployApi');
 // const deploySQS = require('../aws/deploySQS');
 // const deployEC2 = require('../aws/deployEC2');
 // const setupMongo = require('../aws/setupMongo');
 
-const {
-  functionName,
-} = require('../testvariables');
+// const {
+//   functionName,
+// } = require('../testvariables');
 
 const httpsMethods = ['POST'];
 const config = {
@@ -20,8 +20,8 @@ const stageName = 'nami';
 
 module.exports = async function deploy(resourceName, options, path) {
   try {
-    await deployPreLambda(functionName);
-    await deployApi(resourceName, config, httpMethods, stageName);
+    // await deployPreLambda(functionName);
+    // await deployApi(resourceName, config, httpMethods, stageName);
     // await deploySQS();
     // await deployPostLambda();
     // await deployEC2();
