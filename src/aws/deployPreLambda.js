@@ -14,10 +14,13 @@ const {
   functionDesc,
   accountNumber,
   functionRoleName,
-} = require('../testvariables')
+} = require('../testvariables');
 
 module.exports = async function deployPreLambda(functionName) {
-  const zipContents = await readFile(`./../../staging/${functionDir}/${functionName}.zip`)
+  //const zipContents = await readFile(`./../../staging/${functionDir}/${functionName}.zip`);
+  const zipContents = await readFile('./../../staging/preLambda/preLambda.zip');
+  console.log(accountNumber);
+  return;
   try {
     const createFunctionParams = {
       Code: {

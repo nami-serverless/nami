@@ -8,9 +8,9 @@ const homedir = os.homedir();
 
 (async () => {
   try {
-    let resourceName;
+    let resourceName = 'nami-test';
     let options = {};
-    
+
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
 
