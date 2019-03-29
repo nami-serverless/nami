@@ -5,10 +5,13 @@ const deployPreLambda = require('../aws/deployPreLambda');
 // const deployEC2 = require('../aws/deployEC2');
 // const setupMongo = require('../aws/setupMongo');
 
+const {
+  functionName,
+} = require('../testvariables');
 
 module.exports = async function deploy(resourceName, options) {
   try {
-    await deployPreLambda();
+    await deployPreLambda(functionName);
     // await deployApi();
     // await deploySQS();
     // await deployPostLambda();
