@@ -17,6 +17,8 @@ const asyncPutIntegration = promisify(api.putIntegration.bind(api));
 const asyncCreateApi = promisify(api.createRestApi.bind(api));
 const asyncGetResources = promisify(api.getResources.bind(api));
 const asyncGetRegions = promisify(ec2.describeRegions.bind(ec2));
+const asyncCreateKeyPair = promisify(ec2.createKeyPair.bind(ec2));
+const asyncRunInstances = promisify(ec2.runInstances.bind(ec2));
 const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
 const asyncCreateDeployment = promisify(api.createDeployment.bind(api));
 
@@ -31,4 +33,6 @@ module.exports = {
   asyncGetRegions,
   asyncGetCallerIdentity,
   asyncCreateDeployment,
+  asyncCreateKeyPair,
+  asyncRunInstances,
 };

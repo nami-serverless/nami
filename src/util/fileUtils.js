@@ -5,6 +5,7 @@ const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 
 
+
 const exists = async path => (
   new Promise((res) => {
     fs.stat(path, (err) => {
@@ -36,10 +37,16 @@ const readConfig = async (path) => {
   return JSON.parse(config);
 };
 
+const createKeyPairFile = async (homedir, namiKeyPair) => {
+  const namiPath = getNamiPath(homedir);
+  await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
+}
+
 module.exports = {
   readConfig,
 	createDirectory,
   createJSONFile,
   getNamiPath,
   exists,
+  createKeyPairFile
 };
