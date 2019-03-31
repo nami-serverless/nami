@@ -23,6 +23,7 @@ const functionDesc = 'pre-deploy lambda';
 module.exports = async function deployPreLambda(functionName, homedir) {
   //const zipContents = await readFile(`./../../staging/${functionDir}/${functionName}.zip`);
   const { accountNumber } = await readConfig(homedir);
+  // 
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/preLambda/preLambda.zip`);
 
   try {

@@ -3,8 +3,7 @@ const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
-
-
+const copyFile = promisify(fs.copyFile);
 
 const exists = async path => (
   new Promise((res) => {
@@ -48,5 +47,9 @@ module.exports = {
   createJSONFile,
   getNamiPath,
   exists,
-  createKeyPairFile
+  createKeyPairFile,
+  copyFile,
+  readFile,
+  writeFile,
+  mkdir
 };

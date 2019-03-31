@@ -1,8 +1,5 @@
 const os = require('os');
-const { promisify } = require('util');
-const { readFile, readFileSync } = require('fs');
-
-const asyncReadFile = promisify(readFile);
+const { readFileSync } = require('fs');
 const homedir = os.homedir();
 
 const getRegionFromConfigStr = (configStr) => {
@@ -21,12 +18,7 @@ const getRegion = () => {
   }
 };
 
-const asyncGetRegion = async () => {
-  const configStr = await asyncReadFile(`${homedir}/.aws/config`, 'utf8');
-  return getRegionFromConfigStr(configStr);
-};
 
 module.exports = {
   getRegion,
-  asyncGetRegion,
 };
