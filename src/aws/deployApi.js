@@ -9,7 +9,7 @@ const {
 } = require('./awsFunctions');
 
 
-module.exports = async function deployApi(resourceName, path, httpMethods, stageName) {
+module.exports = async function deployApi(resourceName, homedir, httpMethods, stageName) {
   const region = await asyncGetRegion();
 
   // deploy sequence:
@@ -35,7 +35,7 @@ module.exports = async function deployApi(resourceName, path, httpMethods, stage
         httpMethod,
         restApiId,
         resourceName,
-        path,
+        homedir,
         resourceId: rootResourceId,
         statementId: rootPermissionId,
         apiPath: rootPath,

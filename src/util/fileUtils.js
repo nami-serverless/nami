@@ -2,6 +2,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
+const readFile = promisify(fs.readFile);
 
 
 const exists = async path => (
@@ -27,9 +28,16 @@ const createJSONFile = async (fileName, path, json) => {
   await writeFile(`${path}/${fileName}.json`, configStr);
 };
 
-const getNamiPath = async (path) => (`${path}/.nami`);
+const getNamiPath =  (path) => (`${path}/.nami`);
+
+const readConfig = async (path) => {
+  const namiPath = getNamiPath(path);
+  const config = await readFile(`${namiPath}/config.json`);
+  return JSON.parse(config);
+};
 
 module.exports = {
+  readConfig,
 	createDirectory,
   createJSONFile,
   getNamiPath,

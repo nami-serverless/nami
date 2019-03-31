@@ -8,7 +8,7 @@ const homedir = os.homedir();
 
 (async () => {
   try {
-    let resourceName = 'nami-test';
+    let resourceName = 'preLambda';
     let options = {};
 
     const shouldContinue = await catchSetupAndConfig(homedir, command);

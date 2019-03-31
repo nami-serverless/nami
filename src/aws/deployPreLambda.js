@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const { readConfig, getNamiPath } = require('../util/fileUtils');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 
@@ -8,19 +9,22 @@ const {
   asyncLambdaCreateFunction,
 } = require('./awsFunctions.js');
 
-const {
-  functionDir,
-  functionName,
-  functionDesc,
-  accountNumber,
-  functionRoleName,
-} = require('../testvariables');
+//const {
+//  functionDir,
+//  functionName,
+//  functionDesc,
+//  accountNumber,
+//  functionRoleName,
+//} = require('../testvariables');
 
-module.exports = async function deployPreLambda(functionName) {
+const functionRoleName = 'lambda_basic_execution';
+const functionDesc = 'pre-deploy lambda';
+
+module.exports = async function deployPreLambda(functionName, homedir) {
   //const zipContents = await readFile(`./../../staging/${functionDir}/${functionName}.zip`);
-  const zipContents = await readFile('./../../staging/preLambda/preLambda.zip');
-  console.log(accountNumber);
-  return;
+  const { accountNumber } = await readConfig(homedir);
+  const zipContents = await readFile(`${getNamiPath(homedir)}/staging/preLambda/preLambda.zip`);
+
   try {
     const createFunctionParams = {
       Code: {

@@ -1,7 +1,9 @@
 const { promisify } = require('util');
 const AWS = require('aws-sdk')
 const apiVersion = 'latest';
-const region = 'us-east-1'; // need to fix hard coding
+//const region = 'us-east-1'; // need to fix hard coding
+const { getRegion } = require('../util/getRegion');
+const region = getRegion();
 
 const lambda = new AWS.Lambda({ apiVersion, region });
 const api = new AWS.APIGateway({ apiVersion, region });
@@ -16,6 +18,8 @@ const asyncCreateApi = promisify(api.createRestApi.bind(api));
 const asyncGetResources = promisify(api.getResources.bind(api));
 const asyncGetRegions = promisify(ec2.describeRegions.bind(ec2));
 const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
+const asyncCreateDeployment = promisify(api.createDeployment.bind(api));
+
 
 module.exports = {
   asyncLambdaCreateFunction,
@@ -26,4 +30,5 @@ module.exports = {
   asyncGetResources,
   asyncGetRegions,
   asyncGetCallerIdentity,
+  asyncCreateDeployment,
 };

@@ -1,5 +1,6 @@
-//const { readConfig } = require('../util/fileUtils');
+const { readConfig } = require('../util/fileUtils');
 const { asyncGetRegion } = require('../util/getRegion');
+
 
 const {
   asyncAddPermission,
@@ -14,15 +15,12 @@ module.exports = async function createApiGatewayIntegration({
   statementId,
   resourceName,
   apiPath,
-  path,
+  homedir,
 }) {
-  //const config = await readConfig(path); // path to find config file from .bam
 
+  const config = await readConfig(homedir);
+  const { accountNumber } = config;
   const region = await asyncGetRegion();
-  console.log(region);
-  return;
-  //const { accountNumber } = config;
-  const { accountNumber } = path;
 
   // add permission to lambda
   const sourceArn = `arn:aws:execute-api:${region}:${accountNumber}:${restApiId}/*/${httpMethod}${apiPath}`;
