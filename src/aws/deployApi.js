@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const createApiGatewayIntegration = require('./createApiGatewayIntegration');
-const { asyncGetRegion } = require('../util/getRegion');
+const { getRegion } = require('../util/getRegion');
 
 const {
   asyncCreateApi,
@@ -10,7 +10,7 @@ const {
 
 
 module.exports = async function deployApi(resourceName, homedir, httpMethods, stageName) {
-  const region = await asyncGetRegion();
+  const region = await getRegion();
 
   // deploy sequence:
   try {

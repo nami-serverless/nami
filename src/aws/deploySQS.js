@@ -9,7 +9,6 @@ const sqs = new AWS.SQS({ region, apiVersion});
 module.exports = async function deploySQS() {
 	const params = {
 		QueueName: 'namiSQS',
-		MessageRetentionPeriod: 1209600,
 	};
 
 	const queue = await asyncCreateSQS(params);

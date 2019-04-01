@@ -19,7 +19,7 @@ exports.handler = async (event, context) => {
     QueueUrl: 'queueURL',
   };
 
-  await promisify(sqs.sendMessage(params));
+  await promisify(sqs.sendMessage.bind(sqs))(params);
 
   return response;
 };

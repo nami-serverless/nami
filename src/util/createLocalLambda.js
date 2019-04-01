@@ -33,7 +33,7 @@ const getTemplate = async (templateType) => {
 const writeTemplateLocally = async (resourceName, preLambda, template) => {
   const dirName = preLambda ? 'preLambda' : 'postLambda';
   await mkdir(`${getNamiPath(homedir)}/staging/${dirName}`);
-  await writeFile(`${getNamiPath(homedir)}/staging/${dirName}/index.js`, template);
+  await writeFile(`${getNamiPath(homedir)}/staging/${dirName}/${resourceName}.js`, template);
 };
 
 module.exports = async function createLocalLambda(resourceName) {

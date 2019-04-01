@@ -2,6 +2,9 @@ const { promisify } = require('util');
 const { readConfig, getNamiPath } = require('../util/fileUtils');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const { zipper } = require('../util/zipper');
+const createLocalLambda = require('./../util/createLocalLambda');
+const installLambdaDependencies = require('./../util/installLambdaDependencies');
 
 const readFile = promisify(fs.readFile);
 
@@ -11,19 +14,21 @@ const {
 
 //const {
 //  functionDir,
-//  functionName,
+//  lambdaName,
 //  functionDesc,
 //  accountNumber,
-//  functionRoleName,
+//  lambdaRoleName,
 //} = require('../testvariables');
 
-const functionRoleName = 'lambda_basic_execution';
-const functionDesc = 'pre-deploy lambda';
+const lambdaRoleName = 'bamRole';
+const lambdaDesc = 'pre-deploy lambda';
 
-module.exports = async function deployPreLambda(functionName, homedir) {
-  //const zipContents = await readFile(`./../../staging/${functionDir}/${functionName}.zip`);
+module.exports = async function deployPreLambda(lambdaName, homedir) {
   const { accountNumber } = await readConfig(homedir);
-  // 
+
+  await createLocalLambda(lambdaName);
+  await installLambdaDependencies(lambdaName);
+  const zippedFileName = await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/preLambda/preLambda.zip`);
 
   try {
@@ -31,11 +36,11 @@ module.exports = async function deployPreLambda(functionName, homedir) {
       Code: {
         ZipFile: zipContents,
       },
-      FunctionName: `${functionName}`,
-      Handler: `${functionName}.handler`,
-      Role: `arn:aws:iam::${accountNumber}:role/${functionRoleName}`,
+      FunctionName: `${lambdaName}`,
+      Handler: `${lambdaName}.handler`,
+      Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
       Runtime: 'nodejs8.10',
-      Description: `${functionDesc}`,
+      Description: `${lambdaDesc}`,
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
@@ -45,5 +50,3 @@ module.exports = async function deployPreLambda(functionName, homedir) {
     console.log(err)
   }
 };
-
-// rename files to index.js

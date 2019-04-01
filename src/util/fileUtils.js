@@ -30,6 +30,8 @@ const createJSONFile = async (fileName, path, json) => {
 
 const getNamiPath =  (path) => (`${path}/.nami`);
 
+const getStagingPath = (path) => (`${getNamiPath(path)}/staging`);
+
 const readConfig = async (path) => {
   const namiPath = getNamiPath(path);
   const config = await readFile(`${namiPath}/config.json`);
@@ -51,5 +53,6 @@ module.exports = {
   copyFile,
   readFile,
   writeFile,
-  mkdir
+  mkdir,
+  getStagingPath,
 };
