@@ -4,3 +4,4 @@ node_modules/
 *.log
 package-lock.json
 .stCommitMsg
+testvariables.js
