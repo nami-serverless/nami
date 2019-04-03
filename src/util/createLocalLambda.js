@@ -15,32 +15,38 @@ const {
   mkdir,
 } = require('./fileUtils');
 
+const { getEC2PrivateIp } = require('./getEC2PrivateIp');
+
 // const {
   // namiLog,
   // msgAfterAction,
 // } = require('../util/logger');
 
-const getTemplate = async (templateType) => {
+const getTemplate = async (templateType, instanceId) => {
 	const { accountNumber } = await readConfig(homedir);
   const queueURL = `https://sqs.${region}.amazonaws.com/${accountNumber}/namiSQS`;
   const lambdaTemplateLocation = `${__dirname}/../../templates/${templateType}Template.js`;
   const lambdaTemplate = await readFile(lambdaTemplateLocation, 'utf8');
   const lambdaTemplateWithRegion = lambdaTemplate.replace('userRegion', region);
   const lambdaTemplateWithQueueURL = lambdaTemplateWithRegion.replace('queueURL', queueURL);
+
+  if (templateType === 'postLambda') {
+    const privateIp = await getEC2PrivateIp(instanceId);
+    return lambdaTemplateWithQueueURL.replace('privateIp', privateIp);
+  }
+
   return lambdaTemplateWithQueueURL;
 };
 
-const writeTemplateLocally = async (resourceName, preLambda, template) => {
-  const dirName = preLambda ? 'preLambda' : 'postLambda';
+const writeTemplateLocally = async (templateType, template) => {
+  const dirName = templateType;
   await mkdir(`${getNamiPath(homedir)}/staging/${dirName}`);
-  await writeFile(`${getNamiPath(homedir)}/staging/${dirName}/${resourceName}.js`, template);
+  await writeFile(`${getNamiPath(homedir)}/staging/${dirName}/${templateType}.js`, template);
 };
 
-module.exports = async function createLocalLambda(resourceName) {
-  let templateType = 'preLambda'; // fix hardcoding
-
-  const template = await getTemplate(templateType);
-  await writeTemplateLocally(resourceName, true, template);
+module.exports = async function createLocalLambda(templateType, instanceId) {
+  const template = await getTemplate(templateType, instanceId);
+  await writeTemplateLocally(templateType, template);
   // const resource = 'file';
   // const name = `${lambdaName}.js`;
   // namiLog(msgAfterAction(resource, name, 'created'));

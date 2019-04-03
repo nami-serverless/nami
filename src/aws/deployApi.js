@@ -48,7 +48,7 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
     await asyncCreateDeployment({ restApiId, stageName });
 
     const endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/${stageName}`;
-
+    console.log("API Gateway Endpoint:", `${endpoint}`);
     return {
       restApiId,
       endpoint,

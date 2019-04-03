@@ -44,7 +44,7 @@ module.exports = async function deployPreLambda(lambdaName, homedir) {
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
-    console.log(data);
+    console.log("PreLambda deployed");
     return data;
   } catch (err) {
     console.log(err)

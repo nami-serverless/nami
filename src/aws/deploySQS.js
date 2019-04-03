@@ -12,6 +12,6 @@ module.exports = async function deploySQS() {
 	};
 
 	const queue = await asyncCreateSQS(params);
-
+	console.log("SQS Queue deployed");
 	return queue.QueueUrl;
 };
