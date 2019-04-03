@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const { promisify } = require('util');
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = 'mongodb://172.31.24.138:27017';
+const uri = 'mongodb://172.31.95.113:27017';
 let cachedDb = null;
 
 
@@ -14,7 +14,7 @@ async function connectToDatabase(uri) {
   //    return Promise.resolve(cachedDb);
   //  }
 
-  const mongoClientConnect = promisify(MongoClient.connect.bind());
+  const mongoClientConnect = promisify(MongoClient.connect.bind(MongoClient));
   cachedDb = await mongoClientConnect(uri);
 
   return cachedDb;
