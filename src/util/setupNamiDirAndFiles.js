@@ -1,9 +1,10 @@
-const { asyncGetCallerIdentity, asyncGetRegions } = require('../aws/awsFunctions'); 
+const { asyncGetCallerIdentity, asyncGetRegions } = require('../aws/awsFunctions');
 
 const {
   createDirectory,
   createJSONFile,
   getNamiPath,
+  copyEC2SetupScript,
 } = require('./fileUtils');
 
 // fix hard coding by using asyncGetRegions
@@ -24,6 +25,7 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     role: roleName,
   };
   const namiPath = await getNamiPath(homePath);
+  const scriptLocation = `${__dirname}/../../templates`;
   try {
     await createDirectory('.nami', homePath);
     await createDirectory('staging', namiPath);
@@ -31,6 +33,7 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     await createJSONFile('lambdas', namiPath, startingTemplate);
     await createJSONFile('apis', namiPath, startingTemplate);
     await createJSONFile('dbTables', namiPath, startingTemplate);
+    await copyEC2SetupScript(scriptLocation);
     // need config file for SQS?
   } catch(err) {
     console.log(err);
