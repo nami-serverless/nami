@@ -1,9 +1,13 @@
 const fs = require('fs');
+const os = require('os');
+const homedir = os.homedir();
 const { promisify } = require('util');
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const copyFile = promisify(fs.copyFile);
+
+// clean up homedir parameters
 
 const exists = async path => (
   new Promise((res) => {
@@ -28,12 +32,12 @@ const createJSONFile = async (fileName, path, json) => {
   await writeFile(`${path}/${fileName}.json`, configStr);
 };
 
-const getNamiPath =  (path) => (`${path}/.nami`);
+const getNamiPath =  (homedir) => (`${homedir}/.nami`);
 
-const getStagingPath = (path) => (`${getNamiPath(path)}/staging`);
+const getStagingPath = (homedir) => (`${getNamiPath(homedir)}/staging`);
 
-const readConfig = async (path) => {
-  const namiPath = getNamiPath(path);
+const readConfig = async (homedir) => {
+  const namiPath = getNamiPath(homedir);
   const config = await readFile(`${namiPath}/config.json`);
   return JSON.parse(config);
 };
@@ -41,7 +45,15 @@ const readConfig = async (path) => {
 const createKeyPairFile = async (homedir, namiKeyPair) => {
   const namiPath = getNamiPath(homedir);
   await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
-}
+};
+
+const copyEC2SetupScript = async (sourceDir) => {
+  const namiPath = getNamiPath(homedir);
+  const sourceFile = `${sourceDir}/docker_mongo_setup.sh`;
+  const destinationFile = `${namiPath}/docker_mongo_setup.sh`;
+
+  await copyFile(sourceFile, destinationFile);
+};
 
 module.exports = {
   readConfig,
@@ -55,4 +67,5 @@ module.exports = {
   writeFile,
   mkdir,
   getStagingPath,
+  copyEC2SetupScript,
 };

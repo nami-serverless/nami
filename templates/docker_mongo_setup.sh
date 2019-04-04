@@ -21,8 +21,8 @@ add-apt-repository \
 apt-get update
 
 apt-get install -y \
-  docker-ce=5:18.09.4~3-0~ubuntu-xenial \
-  docker-ce-cli=5:18.09.4~3-0~ubuntu-xenial \
+  docker-ce \
+  docker-ce-cli \
   containerd.io
 
 

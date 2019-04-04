@@ -7,7 +7,12 @@ const {
   asyncRunInstances,
 } = require('./awsFunctions');
 
-const { createKeyPairFile, getNamiPath, readFile } = require('../util/fileUtils');
+const {
+  createKeyPairFile,
+  getNamiPath,
+  readFile,
+} = require('../util/fileUtils');
+
 const namiPath = getNamiPath(os.homedir());
 
 const region = getRegion();
@@ -16,18 +21,19 @@ const KeyName = 'nami';
 
 const ec2 = new AWS.EC2({ region, apiVersion });
 
-
-
 module.exports = async function deployEC2(homedir) {
-//	const namiKeyPair = await asyncCreateKeyPair({ KeyName });
-//  await createKeyPairFile(homedir, namiKeyPair);
+  // ignore keypair if exists
+	const namiKeyPair = await asyncCreateKeyPair({ KeyName });
+  await createKeyPairFile(homedir, namiKeyPair);
 
   const data = await readFile(`${namiPath}/docker_mongo_setup.sh`);
   const UserData = data.toString('base64');
 
+  // find relevant AMI Image ID
+
 	const instanceParams = {
     KeyName,
-    ImageId: 'ami-04bbe683cac096622',
+    ImageId: 'ami-0a313d6098716f372',
     InstanceType: 't2.micro',
     MinCount: 1,
     MaxCount: 1,
@@ -36,7 +42,6 @@ module.exports = async function deployEC2(homedir) {
 
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
-  console.log("Created instance", instanceId);
-
-
+  console.log("EC2 instance deployed: ", instanceId);
+  return instanceId;
 }

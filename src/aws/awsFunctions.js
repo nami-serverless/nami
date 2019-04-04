@@ -23,7 +23,9 @@ const asyncRunInstances = promisify(ec2.runInstances.bind(ec2));
 const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
 const asyncCreateDeployment = promisify(api.createDeployment.bind(api));
 const asyncCreateSQS = promisify(sqs.createQueue.bind(sqs));
-const asyncCreateSQSTrigger = promisify(lambda.createEventSourceMapping.bind(lambda));
+const asyncCreateEventSourceMapping = promisify(lambda.createEventSourceMapping.bind(lambda));
+const asyncPutFunctionConcurrency = promisify(lambda.putFunctionConcurrency.bind(lambda));
+const asyncDescribeInstances = promisify(ec2.describeInstances.bind(ec2));
 
 
 module.exports = {
@@ -39,5 +41,7 @@ module.exports = {
   asyncCreateKeyPair,
   asyncRunInstances,
   asyncCreateSQS,
-  asyncCreateSQSTrigger,
+  asyncCreateEventSourceMapping,
+  asyncPutFunctionConcurrency,
+  asyncDescribeInstances,
 };

@@ -1,11 +1,9 @@
 'use strict';
-const AWS = require('aws-sdk');
-const { promisify } = require('util');
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = 'mongodb://172.31.24.138:27017';
+const { promisify } = require('util');
+const uri = 'mongodb://privateIp:27017';
 let cachedDb = null;
-
 
 async function connectToDatabase(uri) {
   console.log('=> connect to database');
@@ -14,7 +12,7 @@ async function connectToDatabase(uri) {
   //    return Promise.resolve(cachedDb);
   //  }
 
-  const mongoClientConnect = promisify(MongoClient.connect.bind());
+  const mongoClientConnect = promisify(MongoClient.connect.bind(MongoClient));
   cachedDb = await mongoClientConnect(uri);
 
   return cachedDb;
@@ -28,7 +26,7 @@ async function queryDatabase (client, event) {
 
   try {
     await database.collection('namiCollection').insertOne({
-      event: { nami: 'surfing nami!' },
+      event: event.Records[0].body,
     });
     return { statusCode: 200, body: 'success' };
   } catch(err) {
@@ -43,7 +41,7 @@ async function queryDatabase (client, event) {
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
-  console.log('event: ', event);
+  console.log('event: ', event.Records[0].body);
 
   try {
     const client = await connectToDatabase(uri);
