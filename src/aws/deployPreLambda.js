@@ -12,15 +12,8 @@ const {
   asyncLambdaCreateFunction,
 } = require('./awsFunctions.js');
 
-//const {
-//  functionDir,
-//  lambdaName,
-//  functionDesc,
-//  accountNumber,
-//  lambdaRoleName,
-//} = require('../testvariables');
 
-const lambdaRoleName = 'bamRole';
+const lambdaRoleName = 'namiPreLambda';
 const lambdaDesc = 'pre-deploy lambda';
 
 module.exports = async function deployPreLambda(lambdaName, homedir) {
