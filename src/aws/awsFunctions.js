@@ -10,6 +10,7 @@ const api = new AWS.APIGateway({ apiVersion, region });
 const ec2 = new AWS.EC2({ apiVersion, region });
 const sts = new AWS.STS({ apiVersion, region });
 const sqs = new AWS.SQS({ apiVersion, region });
+const iam = new AWS.IAM({ apiVersion, region });
 
 const asyncLambdaCreateFunction = promisify(lambda.createFunction.bind(lambda));
 const asyncAddPermission = promisify(lambda.addPermission.bind(lambda));
@@ -27,8 +28,22 @@ const asyncCreateEventSourceMapping = promisify(lambda.createEventSourceMapping.
 const asyncPutFunctionConcurrency = promisify(lambda.putFunctionConcurrency.bind(lambda));
 const asyncDescribeInstances = promisify(ec2.describeInstances.bind(ec2));
 
+// iam
+const asyncCreateRole = promisify(iam.createRole.bind(iam));
+const asyncCreatePolicy = promisify(iam.createPolicy.bind(iam));
+const asyncAttachPolicy = promisify(iam.attachRolePolicy.bind(iam));
+// const asyncDetachPolicy = promisify(iam.detachRolePolicy.bind(iam));
+// const asyncDeleteRole = promisify(iam.deleteRole.bind(iam));
+// const asyncDeletePolicy = promisify(iam.deletePolicy.bind(iam));
+const asyncListRolePolicies = promisify(iam.listAttachedRolePolicies.bind(iam));
+const asyncGetPolicy = promisify(iam.getPolicy.bind(iam));
+const asyncGetRole = promisify(iam.getRole.bind(iam));
+// const asyncListAttachedRolePolicies = promisify(iam.listAttachedRolePolicies.bind(iam));
+
 
 module.exports = {
+  asyncCreateRole,
+  asyncAttachPolicy,
   asyncLambdaCreateFunction,
   asyncAddPermission,
   asyncPutMethod,
