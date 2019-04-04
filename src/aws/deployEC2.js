@@ -30,10 +30,12 @@ module.exports = async function deployEC2(homedir) {
   const UserData = data.toString('base64');
 
   // find relevant AMI Image ID
+  // ImageId: 'ami-0a313d6098716f372',
+  // describeImages EC2 
 
 	const instanceParams = {
     KeyName,
-    ImageId: 'ami-0a313d6098716f372',
+    ImageId: 'ami-08d658f84a6d84a80',
     InstanceType: 't2.micro',
     MinCount: 1,
     MaxCount: 1,

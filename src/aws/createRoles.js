@@ -1,10 +1,10 @@
 const { readConfig, readFile } = require('../util/fileUtils');
 
-const {
-  doesRoleExist,
-  doesPolicyExist,
-  isPolicyAttached,
-} = require('./doesResourceExist');
+// const {
+//   doesRoleExist,
+//   doesPolicyExist,
+//   isPolicyAttached,
+// } = require('./doesResourceExist');
 
 const {
   asyncCreatePolicy,

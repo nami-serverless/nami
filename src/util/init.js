@@ -3,7 +3,7 @@ const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRole
 
 
 module.exports = async function init(roleName, path) {
-  //await setupNamiDirAndFiles(roleName, path);
+  await setupNamiDirAndFiles(roleName, path);
   await createPreLambdaRole();
   await createPostLambdaRole();
 
