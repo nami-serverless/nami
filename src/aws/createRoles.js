@@ -58,7 +58,6 @@ const createRole = async (roleName) => {
   if (!doesRoleNameExist) {
     // create nami Role in IAM
     await asyncCreateRole(roleParams);
-    console.log(roleName, roleParams);
   }
 };
 
@@ -72,7 +71,6 @@ const attachPolicy = async (roleName, policyArn) => {
   if (!isAwsPolicyAttached) {
     const attachedParams = getAttachParams(roleName, policyArn);
     await asyncAttachPolicy(attachedParams);
-    console.log(roleName, policyArn);
   }
 };
 
@@ -99,7 +97,6 @@ const createPostLambdaRole = async() => {
   } catch (err) {
     console.log(err);
   }
-
 };
 
 //const createSQSRole = async(roleName) => {
