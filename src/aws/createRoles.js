@@ -1,17 +1,18 @@
 const { readConfig, readFile } = require('../util/fileUtils');
-
-// const {
-//   doesRoleExist,
-//   doesPolicyExist,
-//   isPolicyAttached,
-// } = require('./doesResourceExist');
-
+const { doesPolicyExist } = require('./doesResourceExist');
 const {
   asyncCreatePolicy,
   asyncCreateRole,
   asyncAttachPolicy,
 } = require('./awsFunctions');
 
+const os = require('os');
+
+// const {
+//   doesRoleExist,
+//   doesPolicyExist,
+//   isPolicyAttached,
+// } = require('./doesResourceExist');
 
 // prelambda and postlambda
 const AWSLambdaBasicExecutionRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole';
@@ -34,6 +35,20 @@ const rolePolicyLambda = {
       Action: 'sts:AssumeRole',
     },
   ],
+};
+
+const sendMessagePolicyParams = {
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Action":[
+            "sqs:SendMessage",
+            "sqs:SendMessageBatch",
+         ],
+         "Resource":"arn:aws:sqs:::*"
+      },
+   ]
 };
 
 const getAttachParams = (roleName, policyArn) => (
@@ -69,10 +84,32 @@ const attachPolicy = async (roleName, policyArn) => {
   }
 };
 
+const createSQSSendMessageRolePolicy = async (SQSPolicyName, SQSPolicyArn) => {
+  const doesSQSPolicyExist = await doesPolicyExist(SQSPolicyArn);
+
+  if (!doesSQSPolicyExist) {
+    const policyDocument = JSON.stringify(sendMessagePolicyParams);
+
+    const policyParams = {
+      PolicyName: SQSPolicyName,
+      PolicyDocument: policyDocument,
+    };
+
+    await asyncCreatePolicy(policyParams);
+  }
+};
+
 const createPreLambdaRole = async(name) => {
+  const { accountNumber } = await readConfig(os.homedir);
+
+  const SQSPolicyName = 'namiPreLambdaRoleSQSPolicy';
+  const SQSPolicyArn = `arn:aws:iam::${accountNumber}:policy/${SQSPolicyName}`;
+
   try
   {
     await createRole(name);
+    await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
+    await attachPolicy(SQSPolicyName, SQSPolicyArn);
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {
@@ -91,6 +128,8 @@ const createPostLambdaRole = async(name) => {
     console.log(err);
   }
 };
+
+
 
 //const createSQSRole = async(roleName) => {
 //  await createRole('namiSQS');

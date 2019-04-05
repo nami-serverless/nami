@@ -22,12 +22,12 @@ const commands = [
 ];
 const commandIsNotValid = command => !commands.includes(command);
 
-module.exports = async function catchSetupAndConfig(path, command) {
-  const namiPath = await getNamiPath(path);
+module.exports = async function catchSetupAndConfig(homedir, command) {
+  const namiPath = await getNamiPath(homedir);
   const namiDirExists = await exists(namiPath);
 
   if (!namiDirExists) {
-    const isInitialized = await init(namiRole, path);
+    const isInitialized = await init(namiRole, homedir);
 
     // don't continue if init incomplete, don't config twice
     if (!isInitialized || command === 'config') return false;

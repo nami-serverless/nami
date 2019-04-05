@@ -8,14 +8,18 @@ const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
 
 (async () => {
-  try {  	
-  	let resourceName = 'nami';
+  try {
+  	let resourceName;
     let options = {};
-    if (args) ({ resourceName, options } = handleArgs(args, command));
 
-    const shouldContinue = await catchSetupAndConfig(homedir, command);
+    if (args) ({ resourceName, options, invalidNameOrFlag } = handleArgs(args, command));
 
-    if (!shouldContinue) { return };
+    const shouldContinue = (await catchSetupAndConfig(homedir, command));
+
+    if (!shouldContinue || invalidNameOrFlag) {
+      console.log('goodbye!');
+      return;
+    };
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
 

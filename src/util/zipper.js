@@ -14,8 +14,8 @@ const unzipper = async (lambdaName) => {
   }
 };
 
-const zipper = async (lambdaName, path, directoryName) => {
-  const stagingPath = getStagingPath(path);
+const zipper = async (lambdaName, homedir, directoryName) => {
+  const stagingPath = getStagingPath(homedir);
   let dirName = directoryName;
 
   if (dirName === undefined) dirName = lambdaName;

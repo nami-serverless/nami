@@ -8,8 +8,8 @@ function sleep(ms){
   });
 }
 
-module.exports = async function init(roleName, path) {
-  await setupNamiDirAndFiles(roleName, path);
+module.exports = async function init(roleName, homedir) {
+  await setupNamiDirAndFiles(roleName, homedir);
   const preLambdaRoleName = 'namiPreLambda';
   const postLambdaRoleName = 'namiPostLambda'
   const doesPreRoleNameExist = await doesRoleExist(preLambdaRoleName);

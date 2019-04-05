@@ -20,6 +20,8 @@ const commandsWithResource = [
 ];
 const commandWithResource = command => commandsWithResource.includes(command);
 
+const invalidName = false;
+
 module.exports = function handleArgs(args, command) {
   let options;
   let resourceName = '';
@@ -31,10 +33,16 @@ module.exports = function handleArgs(args, command) {
     options = getOptions(args);
   }
 
-  resourceName = resourceName[0].toUpperCase().concat(resourceName.slice(1).toLowerCase());
+  if (!resourceName && Object.keys(options).length === 0) {
+    console.log('invalid name or flag');
+    invalidNameOrFlag = true;
+  } else {
+    resourceName = resourceName[0].toUpperCase().concat(resourceName.slice(1).toLowerCase());
+  }
 
   return {
     resourceName,
     options,
+    invalidNameOrFlag,
   };
 };

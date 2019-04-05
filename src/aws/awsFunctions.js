@@ -1,7 +1,6 @@
 const { promisify } = require('util');
 const AWS = require('aws-sdk')
 const apiVersion = 'latest';
-//const region = 'us-east-1'; // need to fix hard coding
 const { getRegion } = require('../util/getRegion');
 const region = getRegion();
 
@@ -66,4 +65,6 @@ module.exports = {
   asyncDescribeImages,
   asyncDescribeKeyPairs,
   asyncGetRole,
+  asyncGetPolicy,
+  asyncCreatePolicy,
 };

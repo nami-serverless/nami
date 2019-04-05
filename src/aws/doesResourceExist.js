@@ -1,4 +1,4 @@
-const { asyncGetRole } = require('./awsFunctions');
+const { asyncGetRole, asyncGetPolicy } = require('./awsFunctions');
 
 const doesRoleExist = async (roleName) => {
   try {
@@ -9,4 +9,16 @@ const doesRoleExist = async (roleName) => {
   }
 };
 
-module.exports = { doesRoleExist };
+const doesPolicyExist = async (policyArn) => {
+  try {
+    await asyncGetPolicy({ PolicyArn: policyArn });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+module.exports = {
+  doesRoleExist,
+  doesPolicyExist,
+ };
