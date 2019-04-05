@@ -26,7 +26,14 @@ apt-get install -y \
   containerd.io
 
 
-docker run -p 27017:27017 -d --name namiStore mongo
+mkdir /data
+docker run \
+  -p 27017:27017 \
+  -v /data:/data/db \
+  -d --restart=always \
+  --name namiStore \
+  mongo
+
 docker exec -i -t namiStore bash
 mongo localhost:27017/test --eval "printjson(db.createCollection('namiCollection'))"
 exit
