@@ -6,9 +6,9 @@ const apiVersion = 'latest';
 
 const sqs = new AWS.SQS({ region, apiVersion});
 
-module.exports = async function deploySQS() {
+module.exports = async function deploySQS(resourceName) {
 	const params = {
-		QueueName: 'namiSQS',
+		QueueName: `${resourceName}SQS`,
 	};
 
 	const queue = await asyncCreateSQS(params);

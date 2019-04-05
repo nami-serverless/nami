@@ -23,9 +23,9 @@ const KeyName = 'nami';
 
 const ec2 = new AWS.EC2({ region, apiVersion });
 
-module.exports = async function deployEC2(homedir) {
+module.exports = async function deployEC2(resourceName, homedir) {
   try {
-    await asyncDescribeKeyPairs({ KeyNames: ['nami']});
+    await asyncDescribeKeyPairs({ KeyNames: [`${KeyName}`]});
   } catch {
     const namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
@@ -48,9 +48,9 @@ module.exports = async function deployEC2(homedir) {
       ResourceType: "instance", 
       Tags: [
         {
-        Key: "Name", 
-        Value: "namiEC2"
-       }
+          Key: "Nami", 
+          Value: `${resourceName}EC2`
+        }
       ]
      }
     ]

@@ -53,12 +53,7 @@ const getRoleParams = roleName => (
 // roleName === namiRole
 const createRole = async (roleName) => {
   const roleParams = getRoleParams(roleName);
-  //const doesRoleNameExist = await doesRoleExist(roleName);
-  const doesRoleNameExist = false;
-  if (!doesRoleNameExist) {
-    // create nami Role in IAM
-    await asyncCreateRole(roleParams);
-  }
+  await asyncCreateRole(roleParams);
 };
 
 // create Role ->
@@ -74,8 +69,7 @@ const attachPolicy = async (roleName, policyArn) => {
   }
 };
 
-const createPreLambdaRole = async() => {
-  let name = 'namiPreLambda';
+const createPreLambdaRole = async(name) => {
   try
   {
     await createRole(name);
@@ -86,8 +80,7 @@ const createPreLambdaRole = async() => {
   }
 };
 
-const createPostLambdaRole = async() => {
-  let name = 'namiPostLambda';
+const createPostLambdaRole = async(name) => {
   try {
     await createRole(name);
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);

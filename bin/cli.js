@@ -2,14 +2,16 @@
 const os = require('os');
 const catchSetupAndConfig = require('./../src/util/catchSetupAndConfig');
 const executeCommand = require('../src/commands/executeCommand');
+const handleArgs = require('./../src/util/handleArgs');
 
 const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
 
 (async () => {
-  try {
-    let resourceName = 'preLambda';
+  try {  	
+  	let resourceName = 'nami';
     let options = {};
+    if (args) ({ resourceName, options } = handleArgs(args, command));
 
     const shouldContinue = await catchSetupAndConfig(homedir, command);
 
