@@ -19,7 +19,12 @@ exports.handler = async (event, context) => {
     QueueUrl: 'queueURL',
   };
 
-  await promisify(sqs.sendMessage.bind(sqs))(params);
+  try {
+    await promisify(sqs.sendMessage.bind(sqs))(params);
+  } catch(err) {
+    response.statusCode = 418;
+    response.body.message = err;
+  }
 
   return response;
 };
