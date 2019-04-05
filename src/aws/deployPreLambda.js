@@ -18,7 +18,7 @@ const lambdaDesc = 'pre-deploy lambda';
 
 module.exports = async function deployPreLambda(resourceName, homedir) {
   const { accountNumber } = await readConfig(homedir);
-  const lambdaName = `pre${resourceName}Lambda`;
+  const lambdaName = `${resourceName}PreLambda`;
   const templateType = 'preLambda';
 
   await createLocalLambda(resourceName, lambdaName, templateType);

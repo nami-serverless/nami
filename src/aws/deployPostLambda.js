@@ -20,7 +20,7 @@ const lambdaDesc = 'post-deploy lambda';
 
 module.exports = async function deployPostLambda(resourceName, homedir, instanceId) {
   const { accountNumber } = await readConfig(homedir);
-  const lambdaName = `post${resourceName}Lambda`;
+  const lambdaName = `${resourceName}PostLambda`;
   const templateType = 'postLambda';
 
   await createLocalLambda(resourceName, lambdaName, templateType, instanceId);
