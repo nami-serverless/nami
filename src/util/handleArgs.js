@@ -20,7 +20,7 @@ const commandsWithResource = [
 ];
 const commandWithResource = command => commandsWithResource.includes(command);
 
-const invalidName = false;
+const invalidNameOrFlag = false;
 
 module.exports = function handleArgs(args, command) {
   let options;

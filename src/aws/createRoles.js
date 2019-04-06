@@ -105,11 +105,10 @@ const createPreLambdaRole = async(name) => {
   const SQSPolicyName = 'namiPreLambdaRoleSQSPolicy';
   const SQSPolicyArn = `arn:aws:iam::${accountNumber}:policy/${SQSPolicyName}`;
 
-  try
-  {
+  try {
     await createRole(name);
     await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
-    await attachPolicy(SQSPolicyName, SQSPolicyArn);
+    await attachPolicy(name, SQSPolicyArn);
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {

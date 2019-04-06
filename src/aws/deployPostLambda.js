@@ -16,7 +16,7 @@ const {
 } = require('./awsFunctions.js');
 
 const lambdaRoleName = 'namiPostLambda';
-const lambdaDesc = 'post-deploy lambda';
+const lambdaDesc = 'Writes webhook payload to database.';
 
 module.exports = async function deployPostLambda(resourceName, homedir, instanceId) {
   const { accountNumber } = await readConfig(homedir);
@@ -30,17 +30,6 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
 
   // find SecurityGroupIds and SubnetIds of EC2 instance and pass in as params
 
-//  VpcConfig: {
-//    SecurityGroupIds: [
-//      'sg-042337d15064ea8fb'
-//    ],
-//    SubnetIds: [
-//      'subnet-0b40aeef19a8653a6',
-//      'subnet-0694c4eb638154715',
-//    ]
-//  }
-
-
   try {
     const createFunctionParams = {
       Code: {
@@ -51,7 +40,15 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
       Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
-      VpcConfig: {},
+      VpcConfig: {
+        SecurityGroupIds: [
+          'sg-042337d15064ea8fb',
+        ],
+        SubnetIds: [
+          'subnet-0b40aeef19a8653a6',
+          'subnet-0694c4eb638154715',
+        ],
+      },
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
