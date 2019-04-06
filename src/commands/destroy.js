@@ -4,11 +4,10 @@ const deleteSQS = require('../aws/deleteSQS');
 const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
 const stopEC2Instance = require('../aws/stopEC2Instance');
 
-
 module.exports = async function destroy(resourceName, options, homedir) {
   await stopEC2Instance(resourceName);
   await deleteEventSourceMapping(resourceName);
-  // await deleteSQS();
-  // await deleteLambda();
-  // await deleteApi();
+  await deleteSQS(resourceName, homedir);
+  // await deleteLambda(resourceName);
+  // await deleteApi(resourceName);
 };

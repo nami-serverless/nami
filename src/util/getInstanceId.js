@@ -21,6 +21,6 @@ module.exports = async function getInstanceId(resourceName) {
     const instanceId = runningInstance.Reservations[0].Instances[0].InstanceId;
     return instanceId;
   } catch (err) {
-    console.log('Describe Instances error =>', err);
+    console.log('Describe Instances error =>', err.message);
   }
 };
