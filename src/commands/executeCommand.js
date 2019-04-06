@@ -1,4 +1,5 @@
 const deploy = require('./deploy');
+const destroy = require('./destroy');
 
 module.exports = async function executeCommand(command, resourceName, options, homedir) {
   if (command === 'deploy') {

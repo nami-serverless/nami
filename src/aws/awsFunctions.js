@@ -30,6 +30,7 @@ const asyncStopInstances = promisify(ec2.stopInstances.bind(ec2));
 const asyncDescribeImages = promisify(ec2.describeImages.bind(ec2));
 const asyncDescribeKeyPairs = promisify(ec2.describeKeyPairs.bind(ec2));
 
+
 // iam
 const asyncCreateRole = promisify(iam.createRole.bind(iam));
 const asyncCreatePolicy = promisify(iam.createPolicy.bind(iam));
