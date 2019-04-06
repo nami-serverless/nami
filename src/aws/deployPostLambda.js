@@ -16,28 +16,19 @@ const {
 } = require('./awsFunctions.js');
 
 const lambdaRoleName = 'namiPostLambda';
-const lambdaDesc = 'post-deploy lambda';
+const lambdaDesc = 'Writes webhook payload to database.';
 
-module.exports = async function deployPostLambda(lambdaName, homedir, instanceId) {
+module.exports = async function deployPostLambda(resourceName, homedir, instanceId) {
   const { accountNumber } = await readConfig(homedir);
+  const lambdaName = `${resourceName}PostLambda`;
+  const templateType = 'postLambda';
 
-  await createLocalLambda(lambdaName, instanceId);
+  await createLocalLambda(resourceName, lambdaName, templateType, instanceId);
   await installLambdaDependencies(lambdaName);
   const zippedFileName = await zipper(lambdaName, homedir);
-  const zipContents = await readFile(`${getNamiPath(homedir)}/staging/postLambda/postLambda.zip`);
+  const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
   // find SecurityGroupIds and SubnetIds of EC2 instance and pass in as params
-
-//  VpcConfig: {
-//    SecurityGroupIds: [
-//      'sg-042337d15064ea8fb'
-//    ],
-//    SubnetIds: [
-//      'subnet-0b40aeef19a8653a6',
-//      'subnet-0694c4eb638154715',
-//    ]
-//  }
-
 
   try {
     const createFunctionParams = {
@@ -49,7 +40,15 @@ module.exports = async function deployPostLambda(lambdaName, homedir, instanceId
       Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
-      VpcConfig: {},
+      VpcConfig: {
+        SecurityGroupIds: [
+          'sg-042337d15064ea8fb',
+        ],
+        SubnetIds: [
+          'subnet-0b40aeef19a8653a6',
+          'subnet-0694c4eb638154715',
+        ],
+      },
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
@@ -62,17 +61,16 @@ module.exports = async function deployPostLambda(lambdaName, homedir, instanceId
     await asyncPutFunctionConcurrency(putFunctionConcurrencyParams);
 
     const region = getRegion();
-    // pass in unique resourceName if given at "namiSQS"
     const eventSourceMappingParams = {
-      EventSourceArn: `arn:aws:sqs:${region}:${accountNumber}:namiSQS`,
+      EventSourceArn: `arn:aws:sqs:${region}:${accountNumber}:${resourceName}SQS`,
       FunctionName: `${lambdaName}`,
       BatchSize: 1,
     };
 
     await asyncCreateEventSourceMapping(eventSourceMappingParams);
-    console.log("PostLambda deployed");
+    console.log(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    console.log(err)
+    console.log(`Error deploying ${lambdaName} => `, err.message);
   }
 };

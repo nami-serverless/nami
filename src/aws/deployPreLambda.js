@@ -14,15 +14,17 @@ const {
 
 
 const lambdaRoleName = 'namiPreLambda';
-const lambdaDesc = 'pre-deploy lambda';
+const lambdaDesc = 'Provides immediate response to webhook and pushes message to queue.';
 
-module.exports = async function deployPreLambda(lambdaName, homedir) {
+module.exports = async function deployPreLambda(resourceName, homedir) {
   const { accountNumber } = await readConfig(homedir);
+  const lambdaName = `${resourceName}PreLambda`;
+  const templateType = 'preLambda';
 
-  await createLocalLambda(lambdaName);
+  await createLocalLambda(resourceName, lambdaName, templateType);
   await installLambdaDependencies(lambdaName);
   const zippedFileName = await zipper(lambdaName, homedir);
-  const zipContents = await readFile(`${getNamiPath(homedir)}/staging/preLambda/preLambda.zip`);
+  const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
   try {
     const createFunctionParams = {
@@ -34,12 +36,15 @@ module.exports = async function deployPreLambda(lambdaName, homedir) {
       Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
+      Tags: {
+        'Nami': `${lambdaName}`,
+      },
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
-    console.log("PreLambda deployed");
+    console.log(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    console.log(err)
+    console.log(`Error deploying ${lambdaName} => `, err.message);
   }
 };

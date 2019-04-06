@@ -17,14 +17,10 @@ const {
 
 const { getEC2PrivateIp } = require('./getEC2PrivateIp');
 
-// const {
-  // namiLog,
-  // msgAfterAction,
-// } = require('../util/logger');
-
-const getTemplate = async (templateType, instanceId) => {
+const getTemplate = async (resourceName, templateType, instanceId) => {
 	const { accountNumber } = await readConfig(homedir);
-  const queueURL = `https://sqs.${region}.amazonaws.com/${accountNumber}/namiSQS`;
+
+  const queueURL = `https://sqs.${region}.amazonaws.com/${accountNumber}/${resourceName}SQS`;
   const lambdaTemplateLocation = `${__dirname}/../../templates/${templateType}Template.js`;
   const lambdaTemplate = await readFile(lambdaTemplateLocation, 'utf8');
   const lambdaTemplateWithRegion = lambdaTemplate.replace('userRegion', region);
@@ -38,16 +34,13 @@ const getTemplate = async (templateType, instanceId) => {
   return lambdaTemplateWithQueueURL;
 };
 
-const writeTemplateLocally = async (templateType, template) => {
-  const dirName = templateType;
-  await mkdir(`${getNamiPath(homedir)}/staging/${dirName}`);
-  await writeFile(`${getNamiPath(homedir)}/staging/${dirName}/${templateType}.js`, template);
+const writeTemplateLocally = async (lambdaName, template) => {
+  await mkdir(`${getNamiPath(homedir)}/staging/${lambdaName}`);
+  await writeFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.js`, template);
 };
 
-module.exports = async function createLocalLambda(templateType, instanceId) {
-  const template = await getTemplate(templateType, instanceId);
-  await writeTemplateLocally(templateType, template);
-  // const resource = 'file';
-  // const name = `${lambdaName}.js`;
-  // namiLog(msgAfterAction(resource, name, 'created'));
+module.exports = async function createLocalLambda(resourceName, lambdaName, templateType, instanceId) {
+  const template = await getTemplate(resourceName, templateType, instanceId);
+
+  await writeTemplateLocally(lambdaName, template);
 };

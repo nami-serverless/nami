@@ -2,20 +2,27 @@
 const os = require('os');
 const catchSetupAndConfig = require('./../src/util/catchSetupAndConfig');
 const executeCommand = require('../src/commands/executeCommand');
+const handleArgs = require('./../src/util/handleArgs');
 
 const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
 
 (async () => {
   try {
-    let resourceName = 'preLambda';
+    let resourceName;
     let options = {};
+    let invalidNameOrFlag;
 
-    const shouldContinue = await catchSetupAndConfig(homedir, command);
+    if (args) ({ resourceName, options, invalidNameOrFlag } = handleArgs(args, command));
 
-    if (!shouldContinue) { return };
+    const shouldContinue = (await catchSetupAndConfig(homedir, command));
+
+    if (!shouldContinue || invalidNameOrFlag) {
+      console.log('goodbye!');
+      return;
+    };
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
-
+    console.log('Command Line Interface error =>', err.message)
   }
 })();

@@ -32,7 +32,7 @@ const createJSONFile = async (fileName, path, json) => {
   await writeFile(`${path}/${fileName}.json`, configStr);
 };
 
-const getNamiPath =  (homedir) => (`${homedir}/.nami`);
+const getNamiPath = homedir => (`${homedir}/.nami`);
 
 const getStagingPath = (homedir) => (`${getNamiPath(homedir)}/staging`);
 
@@ -40,6 +40,23 @@ const readConfig = async (homedir) => {
   const namiPath = getNamiPath(homedir);
   const config = await readFile(`${namiPath}/config.json`);
   return JSON.parse(config);
+};
+
+const readResources = async (homedir) => {
+  const namiPath = getNamiPath(homedir);
+  const resourceInfo = await readFile(`${namiPath}/resources.json`);
+  return JSON.parse(resourceInfo);
+};
+
+const updateResources = async (homedir, idString) => {
+  const namiPath = getNamiPath(homedir);
+  let resourcesJSON = await readFile(`${namiPath}/resources.json`);
+
+  resourcesJSON = JSON.parse(resourcesJSON);
+  resourcesJSON.restApiId = idString;
+  resourcesJSON = JSON.stringify(resourcesJSON, null, 2);
+
+  await writeFile(`${namiPath}/resources.json`, resourcesJSON);
 };
 
 const createKeyPairFile = async (homedir, namiKeyPair) => {
@@ -57,7 +74,7 @@ const copyEC2SetupScript = async (sourceDir) => {
 
 module.exports = {
   readConfig,
-	createDirectory,
+  createDirectory,
   createJSONFile,
   getNamiPath,
   exists,
@@ -68,4 +85,6 @@ module.exports = {
   mkdir,
   getStagingPath,
   copyEC2SetupScript,
+  readResources,
+  updateResources,
 };

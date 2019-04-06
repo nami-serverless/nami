@@ -1,5 +1,3 @@
-'use strict';
-
 const MongoClient = require('mongodb').MongoClient;
 const { promisify } = require('util');
 const uri = 'mongodb://privateIp:27017';
@@ -18,37 +16,44 @@ async function connectToDatabase(uri) {
   return cachedDb;
 }
 
-async function queryDatabase (client, event) {
+async function queryDatabase(client, event) {
   console.log('=> query database');
 
   const dbName = 'test';
   const database = client.db(dbName);
 
   try {
-    await database.collection('namiCollection').insertOne({
-      event: event.Records[0].body,
+    event.Records.forEach((payload) => {
+      database.collection('namiCollection').insertOne({
+        event: payload.body,
+      });
     });
+
     return { statusCode: 200, body: 'success' };
   } catch(err) {
-    console.log('=> an error occurred: ', err);
+    console.log('Query Database Error => ', err.message);
     return { statusCode: 500, body: 'error' };
   } finally {
     client.close();
   }
 }
 
-
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   console.log('event: ', event.Records[0].body);
 
+  // Insert custom code here.
+  // event.Records[0].body is the webhook payload.
+  // This Lambda function is set for 5 concurrent executions.
+  // Feel free to process your webhook payload in any way you see fit.
+
   try {
     const client = await connectToDatabase(uri);
-    console.log("connected to mongo");
+    console.log('connected to mongo');
     const result = await queryDatabase(client, event);
-    console.log('=> returning result: ', result);
-  } catch(err) {
-    console.log('=> an error occurred: ', err);
+    return result;
+  } catch (err) {
+    console.log('Query Database Error => ', err.message);
   }
 };

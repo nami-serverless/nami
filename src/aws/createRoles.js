@@ -1,17 +1,18 @@
 const { readConfig, readFile } = require('../util/fileUtils');
-
-// const {
-//   doesRoleExist,
-//   doesPolicyExist,
-//   isPolicyAttached,
-// } = require('./doesResourceExist');
-
+const { doesPolicyExist } = require('./doesResourceExist');
 const {
   asyncCreatePolicy,
   asyncCreateRole,
   asyncAttachPolicy,
 } = require('./awsFunctions');
 
+const os = require('os');
+
+// const {
+//   doesRoleExist,
+//   doesPolicyExist,
+//   isPolicyAttached,
+// } = require('./doesResourceExist');
 
 // prelambda and postlambda
 const AWSLambdaBasicExecutionRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole';
@@ -36,6 +37,20 @@ const rolePolicyLambda = {
   ],
 };
 
+const sendMessagePolicyParams = {
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Action":[
+            "sqs:SendMessage",
+            "sqs:SendMessageBatch",
+         ],
+         "Resource":"arn:aws:sqs:::*"
+      },
+   ]
+};
+
 const getAttachParams = (roleName, policyArn) => (
   {
     RoleName: roleName,
@@ -53,12 +68,7 @@ const getRoleParams = roleName => (
 // roleName === namiRole
 const createRole = async (roleName) => {
   const roleParams = getRoleParams(roleName);
-  //const doesRoleNameExist = await doesRoleExist(roleName);
-  const doesRoleNameExist = false;
-  if (!doesRoleNameExist) {
-    // create nami Role in IAM
-    await asyncCreateRole(roleParams);
-  }
+  await asyncCreateRole(roleParams);
 };
 
 // create Role ->
@@ -74,20 +84,39 @@ const attachPolicy = async (roleName, policyArn) => {
   }
 };
 
-const createPreLambdaRole = async() => {
-  let name = 'namiPreLambda';
-  try
-  {
-    await createRole(name);
-    await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
-    await attachPolicy(name, AWSLambdaRolePolicyARN);
-  } catch (err) {
-    console.log(err);
+const createSQSSendMessageRolePolicy = async (SQSPolicyName, SQSPolicyArn) => {
+  const doesSQSPolicyExist = await doesPolicyExist(SQSPolicyArn);
+
+  if (!doesSQSPolicyExist) {
+    const policyDocument = JSON.stringify(sendMessagePolicyParams);
+
+    const policyParams = {
+      PolicyName: SQSPolicyName,
+      PolicyDocument: policyDocument,
+    };
+
+    await asyncCreatePolicy(policyParams);
   }
 };
 
-const createPostLambdaRole = async() => {
-  let name = 'namiPostLambda';
+const createPreLambdaRole = async(name) => {
+  const { accountNumber } = await readConfig(os.homedir);
+
+  const SQSPolicyName = 'namiPreLambdaRoleSQSPolicy';
+  const SQSPolicyArn = `arn:aws:iam::${accountNumber}:policy/${SQSPolicyName}`;
+
+  try {
+    await createRole(name);
+    await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
+    await attachPolicy(name, SQSPolicyArn);
+    await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
+    await attachPolicy(name, AWSLambdaRolePolicyARN);
+  } catch (err) {
+    console.log('Error creating PreLambdaRole => ', err.message);
+  }
+};
+
+const createPostLambdaRole = async(name) => {
   try {
     await createRole(name);
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
@@ -95,9 +124,11 @@ const createPostLambdaRole = async() => {
     await attachPolicy(name, AWSLambdaVPCAccessExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaSQSQueueExecutionRole);
   } catch (err) {
-    console.log(err);
+    console.log('Error creating PostLambdaRole => ', err.message);
   }
 };
+
+
 
 //const createSQSRole = async(roleName) => {
 //  await createRole('namiSQS');
