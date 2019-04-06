@@ -9,8 +9,9 @@ const homedir = os.homedir();
 
 (async () => {
   try {
-  	let resourceName;
+    let resourceName;
     let options = {};
+    let invalidNameOrFlag;
 
     if (args) ({ resourceName, options, invalidNameOrFlag } = handleArgs(args, command));
 

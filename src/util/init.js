@@ -2,9 +2,9 @@ const setupNamiDirAndFiles = require('./setupNamiDirAndFiles');
 const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRoles');
 const { doesRoleExist } = require('./../aws/doesResourceExist');
 
-function sleep(ms){
-  return new Promise(resolve=>{
-    setTimeout(resolve,ms)
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
   });
 }
 
