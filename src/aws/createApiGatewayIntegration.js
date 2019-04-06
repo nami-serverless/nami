@@ -21,7 +21,7 @@ module.exports = async function createApiGatewayIntegration({
   const config = await readConfig(homedir);
   const { accountNumber } = config;
   const region = getRegion();
-  const lambdaName = `pre${resourceName}Lambda`;
+  const lambdaName = `${resourceName}PreLambda`;
 
   // add permission to lambda
   const sourceArn = `arn:aws:execute-api:${region}:${accountNumber}:${restApiId}/*/${httpMethod}${apiPath}`;

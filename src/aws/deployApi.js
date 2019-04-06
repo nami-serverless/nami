@@ -11,11 +11,11 @@ const {
 
 module.exports = async function deployApi(resourceName, homedir, httpMethods, stageName) {
   const region = await getRegion();
-
+  const description = 'API Gateway for all Nami framework API endpoints.';
   // deploy sequence:
   try {
     // create rest api
-    const restApiId = (await asyncCreateApi({ name: resourceName })).id;
+    const restApiId = (await asyncCreateApi({ name: resourceName, description })).id;
 
     // get root resource
     const rootResourceId = (await asyncGetResources({ restApiId })).items[0].id;

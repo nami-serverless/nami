@@ -1,8 +1,8 @@
-'use strict';
-const AWS = require('aws-sdk');
 const { promisify } = require('util');
+const AWS = require('aws-sdk');
 const apiVersion = 'latest';
 const region = 'userRegion';
+
 const sqs = new AWS.SQS({ region, apiVersion });
 
 exports.handler = async (event, context) => {
@@ -19,12 +19,13 @@ exports.handler = async (event, context) => {
     QueueUrl: 'queueURL',
   };
 
-  try {
-    await promisify(sqs.sendMessage.bind(sqs))(params);
-  } catch(err) {
-    response.statusCode = 418;
-    response.body.message = err;
-  }
+  // sqs.sendMessage(params, function(err, data) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  await promisify(sqs.sendMessage.bind(sqs))(params);
 
   return response;
 };

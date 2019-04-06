@@ -14,7 +14,7 @@ const {
 
 
 const lambdaRoleName = 'namiPreLambda';
-const lambdaDesc = 'pre-deploy lambda';
+const lambdaDesc = 'Provides immediate response to webhook and pushes message to queue.';
 
 module.exports = async function deployPreLambda(resourceName, homedir) {
   const { accountNumber } = await readConfig(homedir);
