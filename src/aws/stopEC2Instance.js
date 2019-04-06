@@ -8,5 +8,7 @@ module.exports = async function stopEC2Instance(resourceName) {
     InstanceIds: [instanceId],
   };
 
-  await asyncStopInstances(stopInstancesParams);
+  if (instanceId) {
+    await asyncStopInstances(stopInstancesParams);
+  }
 };

@@ -13,6 +13,8 @@ const iam = new AWS.IAM({ apiVersion, region });
 
 const asyncLambdaCreateFunction = promisify(lambda.createFunction.bind(lambda));
 const asyncAddPermission = promisify(lambda.addPermission.bind(lambda));
+const asyncListEventSourceMappings = promisify(lambda.listEventSourceMappings.bind(lambda));
+const asyncDeleteEventSourceMapping = promisify(lambda.deleteEventSourceMapping.bind(lambda));
 const asyncPutMethod = promisify(api.putMethod.bind(api));
 const asyncPutIntegration = promisify(api.putIntegration.bind(api));
 const asyncCreateApi = promisify(api.createRestApi.bind(api));
@@ -68,4 +70,6 @@ module.exports = {
   asyncGetRole,
   asyncGetPolicy,
   asyncCreatePolicy,
+  asyncDeleteEventSourceMapping,
+  asyncListEventSourceMappings,
 };
