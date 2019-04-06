@@ -27,6 +27,7 @@ const asyncPutIntegration = promisify(api.putIntegration.bind(api));
 const asyncCreateApi = promisify(api.createRestApi.bind(api));
 const asyncGetResources = promisify(api.getResources.bind(api));
 const asyncCreateResource = promisify(api.createResource.bind(api));
+const asyncDeleteResource = promisify(api.deleteResource.bind(api));
 
 // ec2
 const asyncGetRegions = promisify(ec2.describeRegions.bind(ec2));
@@ -87,4 +88,5 @@ module.exports = {
   asyncListRolePolicies,
   asyncDeleteFunction,
   asyncCreateResource,
+  asyncDeleteResource,
 };

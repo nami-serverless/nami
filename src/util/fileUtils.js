@@ -32,7 +32,7 @@ const createJSONFile = async (fileName, path, json) => {
   await writeFile(`${path}/${fileName}.json`, configStr);
 };
 
-const getNamiPath =  (homedir) => (`${homedir}/.nami`);
+const getNamiPath = homedir => (`${homedir}/.nami`);
 
 const getStagingPath = (homedir) => (`${getNamiPath(homedir)}/staging`);
 
