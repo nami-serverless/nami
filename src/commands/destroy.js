@@ -1,4 +1,4 @@
-const deleteApi = require('../aws/deleteApi');
+const deleteApiResource = require('../aws/deleteApi');
 const deleteLambda = require('../aws/deleteLambda');
 const deleteSQS = require('../aws/deleteSQS');
 const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
@@ -13,5 +13,5 @@ module.exports = async function destroy(resourceName, options, homedir) {
   await deleteSQS(resourceName, homedir);
   await deleteLambda(preLambda);
   await deleteLambda(postLambda);
-  // await deleteApi(resourceName);
+  await deleteApiResource(resourceName);
 };

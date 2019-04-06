@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const createApiGatewayIntegration = require('./createApiGatewayIntegration');
 const { getRegion } = require('../util/getRegion');
+const { readResources, writeResources } = require('../util/fileUtils');
 
 const {
   asyncCreateApi,
@@ -13,10 +14,17 @@ const {
 module.exports = async function deployApi(resourceName, homedir, httpMethods, stageName) {
   const region = await getRegion();
   const description = 'API Gateway for all Nami framework API endpoints.';
+
   // deploy sequence:
   try {
-    // create rest api
-    const restApiId = (await asyncCreateApi({ name: 'Nami', description })).id;
+    let { restApiId } = await readResources(homedir);
+
+    // create rest api if it doesn't exist
+    if (!restApiId) {
+      restApiId = (await asyncCreateApi({ name: 'Nami', description })).id;
+
+      await writeResources(homedir, restApiId);
+    }
 
     // get root resource
     const rootResourceId = (await asyncGetResources({ restApiId })).items[0].id;

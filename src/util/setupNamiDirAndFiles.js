@@ -24,12 +24,18 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     accountNumber,
     role: roleName,
   };
+
+  const resourcesJSON = {
+    restApiId: '',
+  };
+
   const namiPath = await getNamiPath(homePath);
   const scriptLocation = `${__dirname}/../../templates`;
   try {
     await createDirectory('.nami', homePath);
     await createDirectory('staging', namiPath);
     await createJSONFile('config', namiPath, configJSON);
+    await createJSONFile('resources', namiPath, resourcesJSON);
     await createJSONFile('lambdas', namiPath, startingTemplate);
     await createJSONFile('apis', namiPath, startingTemplate);
     await createJSONFile('dbTables', namiPath, startingTemplate);
