@@ -17,7 +17,6 @@ module.exports = async function createApiGatewayIntegration({
   apiPath,
   homedir,
 }) {
-
   const config = await readConfig(homedir);
   const { accountNumber } = config;
   const region = getRegion();
