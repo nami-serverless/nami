@@ -11,7 +11,7 @@ const getEC2PrivateIp = async (instanceId) => {
     const privateIp = data.Reservations[0].Instances[0].PrivateIpAddress;
     return privateIp;
   } catch (err) {
-    console.log(err);
+    console.log('Error retrieving EC2 private IP => ', err.message);
   }
 };
 

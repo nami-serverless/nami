@@ -31,7 +31,7 @@ async function queryDatabase(client, event) {
 
     return { statusCode: 200, body: 'success' };
   } catch(err) {
-    console.log('=> an error occurred: ', err);
+    console.log('Query Database Error => ', err.message);
     return { statusCode: 500, body: 'error' };
   } finally {
     client.close();
@@ -54,6 +54,6 @@ exports.handler = async (event, context) => {
     const result = await queryDatabase(client, event);
     return result;
   } catch (err) {
-    console.log('=> an error occurred: ', err);
+    console.log('Query Database Error => ', err.message);
   }
 };

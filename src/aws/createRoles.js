@@ -112,7 +112,7 @@ const createPreLambdaRole = async(name) => {
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {
-    console.log(err);
+    console.log('Error creating PreLambdaRole => ', err.message);
   }
 };
 
@@ -124,7 +124,7 @@ const createPostLambdaRole = async(name) => {
     await attachPolicy(name, AWSLambdaVPCAccessExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaSQSQueueExecutionRole);
   } catch (err) {
-    console.log(err);
+    console.log('Error creating PostLambdaRole => ', err.message);
   }
 };
 

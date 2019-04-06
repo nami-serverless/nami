@@ -71,6 +71,6 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
     console.log(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    console.log(err)
+    console.log(`Error deploying ${lambdaName} => `, err.message);
   }
 };

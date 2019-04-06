@@ -35,7 +35,7 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     await createJSONFile('dbTables', namiPath, startingTemplate);
     await copyEC2SetupScript(scriptLocation);
     // need config file for SQS?
-  } catch(err) {
-    console.log(err);
+  } catch (err) {
+    console.log('Error setting up framework directory and files => ', err.message);
   }
 };

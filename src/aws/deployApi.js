@@ -55,6 +55,6 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
       methodPermissionIds,
     };
   } catch (err) {
-    console.log(err);
+    console.log('Error deploying API => ', err.message);
   }
 };

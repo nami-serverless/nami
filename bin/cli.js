@@ -23,6 +23,6 @@ const homedir = os.homedir();
     };
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
-
+    console.log('Command Line Interface error =>', err.message)
   }
 })();
