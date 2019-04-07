@@ -12,7 +12,7 @@ module.exports = async function deploy(resourceName, options, homedir) {
     // const instanceId = await deployEC2(resourceName, homedir);
     await deployPreLambda(resourceName, homedir);
     await deployApi(resourceName, homedir, httpMethods, stageName);
-    // await deploySQS(resourceName);
+    await deploySQS(resourceName);
     // await deployPostLambda(resourceName, homedir, instanceId);
   } catch (err) {
     console.log(err);

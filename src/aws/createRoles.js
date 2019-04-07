@@ -18,11 +18,13 @@ const os = require('os');
 const AWSLambdaBasicExecutionRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole';
 const AWSLambdaRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaRole';
 
+// prelambda
+const AWSLambdaSQSFullAccess = 'arn:aws:iam::aws:policy/AmazonSQSFullAccess';
+
 // postlambda
 const AWSLambdaVPCAccessExecutionRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole';
 const AWSLambdaSQSQueueExecutionRole = 'arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole';
 
-// sqs
 
 const rolePolicyLambda = {
   Version: '2012-10-17',
@@ -107,9 +109,12 @@ const createPreLambdaRole = async(name) => {
 
   try {
     await createRole(name);
-    await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
-    await attachPolicy(name, SQSPolicyArn);
+    // await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
+    // await attachPolicy(name, SQSPolicyArn);
+    await attachPolicy(name, AWSLambdaSQSFullAccess);
+    console.log('sqs full access');
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
+    console.log('basic exe..');
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {
     console.log('Error creating PreLambdaRole => ', err.message);
