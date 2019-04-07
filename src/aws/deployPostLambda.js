@@ -6,8 +6,9 @@ const { zipper } = require('../util/zipper');
 const { getRegion } = require('../util/getRegion');
 const createLocalLambda = require('./../util/createLocalLambda');
 const installLambdaDependencies = require('./../util/installLambdaDependencies');
-const getSecurityGroupId = require('./../util/getSecurityGroupId');
+
 const describeSubnets = require('./../util/describeSubnets');
+const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
 
@@ -15,13 +16,12 @@ const {
   asyncLambdaCreateFunction,
   asyncCreateEventSourceMapping,
   asyncPutFunctionConcurrency,
-  asyncDescribeVpcs,
 } = require('./awsFunctions.js');
 
 const lambdaRoleName = 'namiPostLambda';
 const lambdaDesc = 'Writes webhook payload to database.';
 
-module.exports = async function deployPostLambda(resourceName, homedir, instanceId) {
+module.exports = async function deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId) {
   const { accountNumber } = await readConfig(homedir);
   const lambdaName = `${resourceName}PostLambda`;
   const templateType = 'postLambda';
@@ -31,12 +31,7 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
   await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
-  const allVpcData = await asyncDescribeVpcs({});
-  const defaultVpcID = allVpcData.Vpcs.find(vpc => (vpc.IsDefault === true)).VpcId;
-
-  const description = 'Security Group for Post Queue Lambda in Nami Framework';
-  const groupName = `${resourceName}PostLambdaSecurityGroup`;
-  const SecurityGroupId = await getSecurityGroupId(description, groupName, defaultVpcID);
+  const defaultVpcID = await getDefaultVpcId();
 
   const subnetIds = await describeSubnets(defaultVpcID);
 
