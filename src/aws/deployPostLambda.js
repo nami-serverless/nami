@@ -1,11 +1,14 @@
 const { promisify } = require('util');
-const { readConfig, getNamiPath } = require('../util/fileUtils');
 const fs = require('fs');
-const AWS = require('aws-sdk');
+const { readConfig, getNamiPath } = require('../util/fileUtils');
+
 const { zipper } = require('../util/zipper');
 const { getRegion } = require('../util/getRegion');
 const createLocalLambda = require('./../util/createLocalLambda');
 const installLambdaDependencies = require('./../util/installLambdaDependencies');
+
+const describeSubnets = require('./../util/describeSubnets');
+const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
 
@@ -18,17 +21,19 @@ const {
 const lambdaRoleName = 'namiPostLambda';
 const lambdaDesc = 'Writes webhook payload to database.';
 
-module.exports = async function deployPostLambda(resourceName, homedir, instanceId) {
+module.exports = async function deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId) {
   const { accountNumber } = await readConfig(homedir);
   const lambdaName = `${resourceName}PostLambda`;
   const templateType = 'postLambda';
 
   await createLocalLambda(resourceName, lambdaName, templateType, instanceId);
   await installLambdaDependencies(lambdaName);
-  const zippedFileName = await zipper(lambdaName, homedir);
+  await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
-  // find SecurityGroupIds and SubnetIds of EC2 instance and pass in as params
+  const defaultVpcID = await getDefaultVpcId();
+
+  const subnetIds = await describeSubnets(defaultVpcID);
 
   try {
     const createFunctionParams = {
@@ -41,13 +46,8 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
       VpcConfig: {
-        SecurityGroupIds: [
-          'sg-042337d15064ea8fb',
-        ],
-        SubnetIds: [
-          'subnet-0b40aeef19a8653a6',
-          'subnet-0694c4eb638154715',
-        ],
+        SecurityGroupIds: [SecurityGroupId],
+        SubnetIds: subnetIds,
       },
     };
 
@@ -73,4 +73,6 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
   } catch (err) {
     console.log(`Error deploying ${lambdaName} => `, err.message);
   }
+
+  return true;
 };

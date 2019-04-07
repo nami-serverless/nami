@@ -2,11 +2,14 @@ const AWS = require('aws-sdk');
 const { getRegion } = require('../util/getRegion');
 const os = require('os');
 const getMostRecentUbuntuImageId = require('./../util/getMostRecentUbuntuImageId');
+const createSecurityGroup = require('./../util/createSecurityGroup');
+const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
 const {
   asyncCreateKeyPair,
   asyncRunInstances,
   asyncDescribeKeyPairs,
+  asyncAuthorizeSecurityGroupIngress,
 } = require('./awsFunctions');
 
 const {
@@ -36,6 +39,39 @@ module.exports = async function deployEC2(resourceName, homedir) {
 
   const imageId = await getMostRecentUbuntuImageId();
 
+  const defaultVpcID = await getDefaultVpcId();
+
+  const description = 'Security Group for EC2 Instance in Nami Framework';
+  const groupName = `${resourceName}EC2SecurityGroup`;
+  const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
+
+  console.log('securitygroup =>', typeof SecurityGroupId);
+
+//  const authorizeSecurityGroupIngressParams = {
+//    SourceSecurityGroupName: `${resourceName}PostLambdaSecurityGroup`,
+//    GroupName: groupName,
+//    GroupId: SecurityGroupId,
+//  };
+
+  const authorizeSecurityGroupIngressParams = {
+    GroupId: SecurityGroupId,
+    IpPermissions: [
+       {
+        FromPort: 27017,
+        IpProtocol: "tcp",
+        ToPort: 27017,
+        UserIdGroupPairs: [
+          {
+            Description: "Inbound Access from Nami Post Lambda Function",
+            GroupName:`${resourceName}PostLambdaSecurityGroup`,
+          }
+        ]
+      }
+    ],
+  };
+
+  await asyncAuthorizeSecurityGroupIngress(authorizeSecurityGroupIngressParams);
+
 	const instanceParams = {
     KeyName,
     ImageId: `${imageId}`,
@@ -43,18 +79,20 @@ module.exports = async function deployEC2(resourceName, homedir) {
     MinCount: 1,
     MaxCount: 1,
     UserData,
+    SecurityGroupIds: [SecurityGroupId],
     TagSpecifications: [
      {
-      ResourceType: "instance", 
+      ResourceType: "instance",
       Tags: [
         {
-          Key: "Nami", 
+          Key: "Nami",
           Value: `${resourceName}EC2`
         }
       ]
      }
     ]
 	};
+
 
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
