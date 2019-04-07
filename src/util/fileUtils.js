@@ -48,7 +48,7 @@ const readResources = async (homedir) => {
   return JSON.parse(resourceInfo);
 };
 
-const updateResources = async (homedir, idString) => {
+const writeResources = async (homedir, idString) => {
   const namiPath = getNamiPath(homedir);
   let resourcesJSON = await readFile(`${namiPath}/resources.json`);
 
@@ -86,5 +86,5 @@ module.exports = {
   getStagingPath,
   copyEC2SetupScript,
   readResources,
-  updateResources,
+  writeResources,
 };
