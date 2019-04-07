@@ -1,11 +1,13 @@
 const { promisify } = require('util');
-const { readConfig, getNamiPath } = require('../util/fileUtils');
 const fs = require('fs');
-const AWS = require('aws-sdk');
+const { readConfig, getNamiPath } = require('../util/fileUtils');
+
 const { zipper } = require('../util/zipper');
 const { getRegion } = require('../util/getRegion');
 const createLocalLambda = require('./../util/createLocalLambda');
 const installLambdaDependencies = require('./../util/installLambdaDependencies');
+const getSecurityGroupId = require('./../util/getSecurityGroupId');
+const describeSubnets = require('./../util/describeSubnets');
 
 const readFile = promisify(fs.readFile);
 
@@ -13,6 +15,7 @@ const {
   asyncLambdaCreateFunction,
   asyncCreateEventSourceMapping,
   asyncPutFunctionConcurrency,
+  asyncDescribeVpcs,
 } = require('./awsFunctions.js');
 
 const lambdaRoleName = 'namiPostLambda';
@@ -25,10 +28,17 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
 
   await createLocalLambda(resourceName, lambdaName, templateType, instanceId);
   await installLambdaDependencies(lambdaName);
-  const zippedFileName = await zipper(lambdaName, homedir);
+  await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
-  // find SecurityGroupIds and SubnetIds of EC2 instance and pass in as params
+  const allVpcData = await asyncDescribeVpcs({});
+  const defaultVpcID = allVpcData.Vpcs.find(vpc => (vpc.IsDefault === true)).VpcId;
+
+  const description = 'Security Group for Post Queue Lambda in Nami Framework';
+  const groupName = `${resourceName}PostLambdaSecurityGroup`;
+  const SecurityGroupId = await getSecurityGroupId(description, groupName, defaultVpcID);
+
+  const subnetIds = await describeSubnets(defaultVpcID);
 
   try {
     const createFunctionParams = {
@@ -41,13 +51,8 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
       VpcConfig: {
-        SecurityGroupIds: [
-          'sg-042337d15064ea8fb',
-        ],
-        SubnetIds: [
-          'subnet-0b40aeef19a8653a6',
-          'subnet-0694c4eb638154715',
-        ],
+        SecurityGroupIds: [SecurityGroupId],
+        SubnetIds: subnetIds,
       },
     };
 
@@ -73,4 +78,6 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
   } catch (err) {
     console.log(`Error deploying ${lambdaName} => `, err.message);
   }
+
+  return true;
 };
