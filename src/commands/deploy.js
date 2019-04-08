@@ -17,7 +17,6 @@ module.exports = async function deploy(resourceName, options, homedir) {
     const description = 'Security Group for Post Queue Lambda in Nami Framework';
     const groupName = `${resourceName}PostLambdaSecurityGroup`;
     const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
-    console.log(SecurityGroupId);
 
     const instanceId = await deployEC2(resourceName, homedir);
     await deployPreLambda(resourceName, homedir);

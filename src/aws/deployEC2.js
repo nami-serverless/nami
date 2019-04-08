@@ -16,6 +16,7 @@ const {
   createKeyPairFile,
   getNamiPath,
   readFile,
+  changePermissionsOnKeyPairFile,
 } = require('../util/fileUtils');
 
 const namiPath = getNamiPath(os.homedir());
@@ -32,6 +33,7 @@ module.exports = async function deployEC2(resourceName, homedir) {
   } catch {
     const namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
+    await changePermissionsOnKeyPairFile(homedir, namiKeyPair);
   }
 
   const data = await readFile(`${namiPath}/docker_mongo_setup.sh`);
@@ -44,14 +46,6 @@ module.exports = async function deployEC2(resourceName, homedir) {
   const description = 'Security Group for EC2 Instance in Nami Framework';
   const groupName = `${resourceName}EC2SecurityGroup`;
   const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
-
-  console.log('securitygroup =>', typeof SecurityGroupId);
-
-//  const authorizeSecurityGroupIngressParams = {
-//    SourceSecurityGroupName: `${resourceName}PostLambdaSecurityGroup`,
-//    GroupName: groupName,
-//    GroupId: SecurityGroupId,
-//  };
 
   const authorizeSecurityGroupIngressParams = {
     GroupId: SecurityGroupId,

@@ -6,6 +6,7 @@ const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const copyFile = promisify(fs.copyFile);
+const changePermissions = promisify(fs.chmod);
 
 // clean up homedir parameters
 
@@ -62,6 +63,14 @@ const writeResources = async (homedir, idString) => {
 const createKeyPairFile = async (homedir, namiKeyPair) => {
   const namiPath = getNamiPath(homedir);
   await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
+  await writeFile(`${process.cwd()}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
+  console.log(`${namiKeyPair.KeyName}.pem key pair file has been saved to your current directory. Do not delete this file. You will need it to connect to your EC2 instance via SSH.`);
+};
+
+const changePermissionsOnKeyPairFile = async (homedir, namiKeyPair) => {
+  const namiPath = getNamiPath(homedir);
+  await changePermissions(`${namiPath}/${namiKeyPair.KeyName}.pem`, 0o400);
+  await changePermissions(`${process.cwd()}/${namiKeyPair.KeyName}.pem`, 0o400);
 };
 
 const copyEC2SetupScript = async (sourceDir) => {
@@ -87,4 +96,5 @@ module.exports = {
   copyEC2SetupScript,
   readResources,
   writeResources,
+  changePermissionsOnKeyPairFile,
 };
