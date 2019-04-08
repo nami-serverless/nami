@@ -35,5 +35,5 @@ docker run \
   mongo
 
 docker exec -i -t namiStore bash
-mongo localhost:27017/test --eval "printjson(db.createCollection('namiCollection'))"
+mongo nami localhost:27017/test --eval "printjson(db.createCollection('namiCollection'))"
 exit
