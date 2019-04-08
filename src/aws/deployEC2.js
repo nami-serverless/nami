@@ -84,7 +84,15 @@ module.exports = async function deployEC2(resourceName, homedir) {
         }
       ]
      }
-    ]
+   ],
+   BlockDeviceMappings: [
+     {
+       DeviceName: '/dev/sda1',
+       Ebs: {
+         VolumeSize: 100,
+       },
+     },
+   ],
 	};
 
 
