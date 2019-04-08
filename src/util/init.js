@@ -17,14 +17,12 @@ module.exports = async function init(roleName, homedir) {
 
   if (!doesPreRoleNameExist) {
   	await createPreLambdaRole(preLambdaRoleName);
-  	console.log('initializing first lambda role.');
-  	await sleep(2500);
+  	console.log('Initializing first lambda role.');
   }
 
   if (!doesPostRoleNameExist) {
   	await createPostLambdaRole(postLambdaRoleName);
-  	console.log('initializing second lambda role.');
-  	await sleep(2500);
+  	console.log('Initializing second lambda role.');
   }
 
   return true;

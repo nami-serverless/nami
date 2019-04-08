@@ -49,12 +49,12 @@ const readResources = async (homedir) => {
   return JSON.parse(resourceInfo);
 };
 
-const writeResources = async (homedir, idString) => {
+const writeResources = async (homedir, resource, idString) => {
   const namiPath = getNamiPath(homedir);
   let resourcesJSON = await readFile(`${namiPath}/resources.json`);
 
   resourcesJSON = JSON.parse(resourcesJSON);
-  resourcesJSON.restApiId = idString;
+  resourcesJSON[resource] = idString;
   resourcesJSON = JSON.stringify(resourcesJSON, null, 2);
 
   await writeFile(`${namiPath}/resources.json`, resourcesJSON);
