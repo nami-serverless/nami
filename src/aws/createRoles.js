@@ -1,12 +1,12 @@
-const { readConfig, readFile } = require('../util/fileUtils');
+const os = require('os');
+
+const { readConfig } = require('../util/fileUtils');
 const { doesPolicyExist } = require('./doesResourceExist');
 const {
   asyncCreatePolicy,
   asyncCreateRole,
   asyncAttachPolicy,
 } = require('./awsFunctions');
-
-const os = require('os');
 
 // const {
 //   doesRoleExist,
@@ -39,19 +39,19 @@ const rolePolicyLambda = {
   ],
 };
 
-const sendMessagePolicyParams = {
-   "Version":"2012-10-17",
-   "Statement":[
-      {
-         "Effect":"Allow",
-         "Action":[
-            "sqs:SendMessage",
-            "sqs:SendMessageBatch",
-         ],
-         "Resource":"arn:aws:sqs:::*"
-      },
-   ]
-};
+// const sendMessagePolicyParams = {
+//   Version: '2012-10-17',
+//   Statement: [
+//     {
+//       Effect: 'Allow',
+//       Action: [
+//         'sqs:SendMessage',
+//         'sqs:SendMessageBatch',
+//       ],
+//       Resource: 'arn:aws:sqs:::*',
+//     },
+//   ],
+// };
 
 const getAttachParams = (roleName, policyArn) => (
   {
@@ -60,16 +60,17 @@ const getAttachParams = (roleName, policyArn) => (
   }
 );
 
-const getRoleParams = roleName => (
+const getRoleParams = (roleName, description) => (
   {
     RoleName: roleName,
+    Description: description,
     AssumeRolePolicyDocument: JSON.stringify(rolePolicyLambda),
   }
 );
 
 // roleName === namiRole
-const createRole = async (roleName) => {
-  const roleParams = getRoleParams(roleName);
+const createRole = async (roleName, description) => {
+  const roleParams = getRoleParams(roleName, description);
   await asyncCreateRole(roleParams);
 };
 
@@ -106,9 +107,10 @@ const createPreLambdaRole = async(name) => {
 
   const SQSPolicyName = 'namiPreLambdaRoleSQSPolicy';
   const SQSPolicyArn = `arn:aws:iam::${accountNumber}:policy/${SQSPolicyName}`;
+  const description = 'Permissions for a Lambda function to return a HTTP response to a webhook, and send the webhook message to SQS';
 
   try {
-    await createRole(name);
+    await createRole(name, description);
     // await createSQSSendMessageRolePolicy(SQSPolicyName, SQSPolicyArn);
     // await attachPolicy(name, SQSPolicyArn);
     await attachPolicy(name, AWSLambdaSQSFullAccess);
@@ -122,8 +124,9 @@ const createPreLambdaRole = async(name) => {
 };
 
 const createPostLambdaRole = async(name) => {
+  const description = 'Permissions for a Lambda function to take a webhook message from the queue and write it to a database on EC2';
   try {
-    await createRole(name);
+    await createRole(name, description);
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
     await attachPolicy(name, AWSLambdaVPCAccessExecutionRolePolicyARN);
