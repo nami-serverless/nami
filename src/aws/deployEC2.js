@@ -1,5 +1,3 @@
-const AWS = require('aws-sdk');
-const { getRegion } = require('../util/getRegion');
 const os = require('os');
 const getMostRecentUbuntuImageId = require('./../util/getMostRecentUbuntuImageId');
 const createSecurityGroup = require('./../util/createSecurityGroup');
@@ -21,16 +19,13 @@ const {
 
 const namiPath = getNamiPath(os.homedir());
 
-const region = getRegion();
-const apiVersion = 'latest';
 const KeyName = 'nami';
 
-const ec2 = new AWS.EC2({ region, apiVersion });
 
 module.exports = async function deployEC2(resourceName, homedir) {
   try {
-    await asyncDescribeKeyPairs({ KeyNames: [`${KeyName}`]});
-  } catch {
+    await asyncDescribeKeyPairs({ KeyNames: [`${KeyName}`] });
+  } catch (err) {
     const namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
     await changePermissionsOnKeyPairFile(homedir, namiKeyPair);
@@ -50,23 +45,23 @@ module.exports = async function deployEC2(resourceName, homedir) {
   const authorizeSecurityGroupIngressParams = {
     GroupId: SecurityGroupId,
     IpPermissions: [
-       {
+      {
         FromPort: 27017,
-        IpProtocol: "tcp",
+        IpProtocol: 'tcp',
         ToPort: 27017,
         UserIdGroupPairs: [
           {
-            Description: "Inbound Access from Nami Post Lambda Function",
-            GroupName:`${resourceName}PostLambdaSecurityGroup`,
-          }
-        ]
-      }
+            Description: 'Inbound Access from Nami Post Lambda Function',
+            GroupName: `${resourceName}PostLambdaSecurityGroup`,
+          },
+        ],
+      },
     ],
   };
 
   await asyncAuthorizeSecurityGroupIngress(authorizeSecurityGroupIngressParams);
 
-	const instanceParams = {
+  const instanceParams = {
     KeyName,
     ImageId: `${imageId}`,
     InstanceType: 't2.micro',
@@ -75,29 +70,30 @@ module.exports = async function deployEC2(resourceName, homedir) {
     UserData,
     SecurityGroupIds: [SecurityGroupId],
     TagSpecifications: [
-     {
-      ResourceType: "instance",
-      Tags: [
-        {
-          Key: "Nami",
-          Value: `${resourceName}EC2`
-        }
-      ]
-     }
-   ],
-   BlockDeviceMappings: [
-     {
-       DeviceName: '/dev/sda1',
-       Ebs: {
-         VolumeSize: 100,
-       },
-     },
-   ],
-	};
+      {
+        ResourceType: 'instance',
+        Tags: [
+          {
+            Key: 'Nami',
+            Value: `${resourceName}EC2`,
+          },
+        ],
+      },
+    ],
+    BlockDeviceMappings: [
+      {
+        DeviceName: '/dev/sda1',
+        Ebs: {
+          VolumeSize: 100,
+          DeleteOnTermination: false,
+        },
+      },
+    ],
+  };
 
 
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
-  console.log("EC2 instance deployed: ", instanceId);
+  console.log('EC2 instance deployed: ', instanceId);
   return instanceId;
-}
+};

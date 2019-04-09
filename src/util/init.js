@@ -1,12 +1,7 @@
 const setupNamiDirAndFiles = require('./setupNamiDirAndFiles');
 const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRoles');
 const { doesRoleExist } = require('./../aws/doesResourceExist');
-
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+const sleep = require('./sleep');
 
 module.exports = async function init(roleName, homedir) {
   await setupNamiDirAndFiles(roleName, homedir);

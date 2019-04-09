@@ -29,13 +29,9 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
     // get root resource
     const resources = (await asyncGetResources({ restApiId }));
 
-    console.log(resources);
-
     const rootResourceId = resources.items.find(resource => (
       resource.path === '/'
     )).id;
-
-    console.log(rootResourceId);
 
     const createResourceParams = {
       parentId: rootResourceId,
