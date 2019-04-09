@@ -19,7 +19,7 @@ async function connectToDatabase(uri) {
 async function queryDatabase(client, event) {
   console.log('=> query database');
 
-  const dbName = 'test';
+  const dbName = 'nami';
   const database = client.db(dbName);
 
   try {

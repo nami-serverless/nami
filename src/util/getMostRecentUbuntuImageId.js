@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const { asyncDescribeImages } = require('./../aws/awsFunctions.js');
 
 const sortImagesByDate = function (array) {
@@ -11,18 +10,26 @@ const sortImagesByDate = function (array) {
 };
 
 module.exports = async function getMostRecentUbuntuImageId() {
-  const describeImagesParams = { 
+  const describeImagesParams = {
     Filters: [
-      { Name: 'name', 
-        Values: ['ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*']
+      {
+        Name: 'name',
+        Values: ['ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*'],
       },
-      { Name: 'is-public',
+      {
+        Name: 'owner-id',
+        Values: ['099720109477'],
+      },
+      {
+        Name: 'is-public',
         Values: ['true'],
       },
-      { Name: 'root-device-type',
+      {
+        Name: 'root-device-type',
         Values: ['ebs'],
       },
-      { Name: 'state',
+      {
+        Name: 'state',
         Values: ['available'],
       },
     ],
@@ -32,4 +39,4 @@ module.exports = async function getMostRecentUbuntuImageId() {
   const images = results.Images;
 
   return sortImagesByDate(images)[0].ImageId;
-}
+};

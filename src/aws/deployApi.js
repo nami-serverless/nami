@@ -23,11 +23,15 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
     if (!restApiId) {
       restApiId = (await asyncCreateApi({ name: 'Nami', description })).id;
 
-      await writeResources(homedir, restApiId);
+      await writeResources(homedir, 'restApiId', restApiId);
     }
 
     // get root resource
-    const rootResourceId = (await asyncGetResources({ restApiId })).items[0].id;
+    const resources = (await asyncGetResources({ restApiId }));
+
+    const rootResourceId = resources.items.find(resource => (
+      resource.path === '/'
+    )).id;
 
     const createResourceParams = {
       parentId: rootResourceId,
@@ -63,7 +67,13 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
     }
 
     // create deployment
+    // let { deploymentId } = await readResources(homedir);
+    //
+    // if (!deploymentId) {
     await asyncCreateDeployment({ restApiId, stageName });
+      // deploymentId = deployment.id;
+      // await writeResources(homedir, 'deploymentId', deploymentId);
+    // }
 
     const endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/${stageName}/${resourceName}`;
     console.log("API Gateway Endpoint:", `${endpoint}`);
