@@ -20,7 +20,7 @@ const commandsWithResource = [
 ];
 const commandWithResource = command => commandsWithResource.includes(command);
 
-const invalidNameOrFlag = false;
+let invalidNameOrFlag = false;
 
 module.exports = function handleArgs(args, command) {
   let options;
@@ -37,7 +37,7 @@ module.exports = function handleArgs(args, command) {
     console.log('invalid name or flag');
     invalidNameOrFlag = true;
   } else {
-    resourceName = resourceName[0].toUpperCase().concat(resourceName.slice(1).toLowerCase());
+    resourceName = resourceName.toLowerCase();
   }
 
   return {
