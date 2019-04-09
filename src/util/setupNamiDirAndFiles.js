@@ -25,7 +25,7 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     await createDirectory('staging', namiPath);
     await createJSONFile('config', namiPath, configJSON);
     await createJSONFile('resources', namiPath, resourcesJSON);
-    await copyEC2SetupScript(scriptLocation);
+    await copyEC2SetupScript(namiPath, scriptLocation);
     // need config file for SQS?
   } catch (err) {
     console.log('Error setting up framework directory and files => ', err.message);

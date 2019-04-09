@@ -1,10 +1,6 @@
-const AWS = require('aws-sdk');
 const { getRegion } = require('../util/getRegion');
 const { asyncCreateSQS } = require('./awsFunctions');
-const region = getRegion();
-const apiVersion = 'latest';
-
-const sqs = new AWS.SQS({ region, apiVersion});
+const namiLog = require('./../util/logger');
 
 module.exports = async function deploySQS(resourceName) {
 	const params = {
@@ -12,6 +8,6 @@ module.exports = async function deploySQS(resourceName) {
 	};
 
 	const queue = await asyncCreateSQS(params);
-	console.log("SQS Queue deployed");
+	namiLog('SQS Queue deployed');
 	return queue.QueueUrl;
 };

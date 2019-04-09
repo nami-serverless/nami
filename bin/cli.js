@@ -3,6 +3,7 @@ const os = require('os');
 const catchSetupAndConfig = require('./../src/util/catchSetupAndConfig');
 const executeCommand = require('../src/commands/executeCommand');
 const handleArgs = require('./../src/util/handleArgs');
+const namiLog = require('./../src/util/logger');
 
 const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
@@ -18,11 +19,11 @@ const homedir = os.homedir();
     const shouldContinue = (await catchSetupAndConfig(homedir, command));
 
     if (!shouldContinue || invalidNameOrFlag) {
-      console.log('goodbye!');
+      namiLog('goodbye!');
       return;
     };
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
-    console.log('Command Line Interface error =>', err.message)
+    namiLog('Command Line Interface error =>', err.message)
   }
 })();

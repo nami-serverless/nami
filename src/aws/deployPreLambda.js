@@ -1,12 +1,12 @@
 const { promisify } = require('util');
-const { readConfig, getNamiPath } = require('../util/fileUtils');
 const fs = require('fs');
-const AWS = require('aws-sdk');
+const { readConfig, getNamiPath } = require('../util/fileUtils');
 const { zipper } = require('../util/zipper');
 const createLocalLambda = require('./../util/createLocalLambda');
 const installLambdaDependencies = require('./../util/installLambdaDependencies');
 
 const readFile = promisify(fs.readFile);
+const namiLog = require('./../util/logger');
 
 const {
   asyncLambdaCreateFunction,
@@ -23,7 +23,7 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
 
   await createLocalLambda(resourceName, lambdaName, templateType);
   await installLambdaDependencies(lambdaName);
-  const zippedFileName = await zipper(lambdaName, homedir);
+  await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
   try {
@@ -37,12 +37,12 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
       Runtime: 'nodejs8.10',
       Description: `${lambdaDesc}`,
       Tags: {
-        'Nami': `${lambdaName}`,
+        Nami: `${lambdaName}`,
       },
     };
 
     const data = await asyncLambdaCreateFunction(createFunctionParams);
-    console.log(`${lambdaName} deployed`);
+    namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
     console.log(`Error deploying ${lambdaName} => `, err.message);

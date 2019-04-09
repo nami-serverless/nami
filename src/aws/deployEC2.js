@@ -2,6 +2,7 @@ const os = require('os');
 const getMostRecentUbuntuImageId = require('./../util/getMostRecentUbuntuImageId');
 const createSecurityGroup = require('./../util/createSecurityGroup');
 const getDefaultVpcId = require('./../util/getDefaultVpcId');
+const namiLog = require('./../util/logger');
 
 const {
   asyncCreateKeyPair,
@@ -91,9 +92,8 @@ module.exports = async function deployEC2(resourceName, homedir) {
     ],
   };
 
-
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
-  console.log('EC2 instance deployed: ', instanceId);
+  namiLog(`EC2 instance deployed: ${instanceId}`);
   return instanceId;
 };

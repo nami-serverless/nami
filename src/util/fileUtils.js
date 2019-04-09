@@ -1,7 +1,6 @@
 const fs = require('fs');
-const os = require('os');
-const homedir = os.homedir();
 const { promisify } = require('util');
+
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -35,7 +34,7 @@ const createJSONFile = async (fileName, path, json) => {
 
 const getNamiPath = homedir => (`${homedir}/.nami`);
 
-const getStagingPath = (homedir) => (`${getNamiPath(homedir)}/staging`);
+const getStagingPath = homedir => (`${getNamiPath(homedir)}/staging`);
 
 const readConfig = async (homedir) => {
   const namiPath = getNamiPath(homedir);
@@ -73,8 +72,7 @@ const changePermissionsOnKeyPairFile = async (homedir, namiKeyPair) => {
   await changePermissions(`${process.cwd()}/${namiKeyPair.KeyName}.pem`, 0o400);
 };
 
-const copyEC2SetupScript = async (sourceDir) => {
-  const namiPath = getNamiPath(homedir);
+const copyEC2SetupScript = async (namiPath, sourceDir) => {
   const sourceFile = `${sourceDir}/docker_mongo_setup.sh`;
   const destinationFile = `${namiPath}/docker_mongo_setup.sh`;
 

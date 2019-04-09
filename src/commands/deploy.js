@@ -5,7 +5,7 @@ const deploySQS = require('../aws/deploySQS');
 const deployEC2 = require('../aws/deployEC2');
 const getDefaultVpcId = require('./../util/getDefaultVpcId');
 const createSecurityGroup = require('./../util/createSecurityGroup');
-
+const namiLog = require('./../util/logger');
 
 const httpMethods = ['POST'];
 const stageName = 'nami';
@@ -24,6 +24,6 @@ module.exports = async function deploy(resourceName, options, homedir) {
     await deploySQS(resourceName);
     await deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId);
   } catch (err) {
-    console.log(err);
+    namiLog(err);
   }
 };

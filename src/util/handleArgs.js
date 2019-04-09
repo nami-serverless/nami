@@ -1,3 +1,5 @@
+const namiLog = require('./logger');
+
 const getOptions = (flags) => {
   const options = {};
   const formattedOptions = flags
@@ -34,7 +36,7 @@ module.exports = function handleArgs(args, command) {
   }
 
   if (!resourceName && Object.keys(options).length === 0) {
-    console.log('invalid name or flag');
+    namiLog('invalid name or flag');
     invalidNameOrFlag = true;
   } else {
     resourceName = resourceName.toLowerCase();

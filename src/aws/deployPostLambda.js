@@ -11,6 +11,7 @@ const describeSubnets = require('./../util/describeSubnets');
 const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
+const namiLog = require('./../util/logger');
 
 const {
   asyncLambdaCreateFunction,
@@ -68,7 +69,7 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
     };
 
     await asyncCreateEventSourceMapping(eventSourceMappingParams);
-    console.log(`${lambdaName} deployed`);
+    namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
     console.log(`Error deploying ${lambdaName} => `, err.message);

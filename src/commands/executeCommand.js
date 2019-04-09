@@ -1,5 +1,6 @@
 const deploy = require('./deploy');
 const destroy = require('./destroy');
+const namiLog = require('./../util/logger');
 
 module.exports = async function executeCommand(command, resourceName, options, homedir) {
   if (command === 'deploy') {
@@ -7,6 +8,6 @@ module.exports = async function executeCommand(command, resourceName, options, h
   } else if (command === 'destroy') {
   	await destroy(resourceName, options, homedir);
   } else {
-    console.log(`Command: ${command} is not valid.`);
+    namiLog(`Command: ${command} is not valid.`);
   }
 };

@@ -2,6 +2,7 @@ const uuid = require('uuid');
 const createApiGatewayIntegration = require('./createApiGatewayIntegration');
 const { getRegion } = require('../util/getRegion');
 const { readResources, writeResources } = require('../util/fileUtils');
+const namiLog = require('./../util/logger');
 
 const {
   asyncCreateApi,
@@ -66,17 +67,10 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
       await createApiGatewayIntegration(childIntegrationParams);
     }
 
-    // create deployment
-    // let { deploymentId } = await readResources(homedir);
-    //
-    // if (!deploymentId) {
     await asyncCreateDeployment({ restApiId, stageName });
-      // deploymentId = deployment.id;
-      // await writeResources(homedir, 'deploymentId', deploymentId);
-    // }
 
     const endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/${stageName}/${resourceName}`;
-    console.log("API Gateway Endpoint:", `${endpoint}`);
+    namiLog(`API Gateway Endpoint: ${endpoint}`);
     return {
       restApiId,
       endpoint,
