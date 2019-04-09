@@ -24,6 +24,6 @@ const homedir = os.homedir();
     };
     await executeCommand(command, resourceName, options, homedir);
   } catch (err) {
-    namiLog('Command Line Interface error =>', err.message)
+    namiLog(`Command Line Interface error => ${err.message}`)
   }
 })();
