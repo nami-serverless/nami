@@ -10,7 +10,7 @@ module.exports = async function getInstanceId(resourceName) {
       },
       {
         Name: 'instance-state-name',
-        Values: ['running'],
+        Values: ['running', 'pending'],
       },
     ],
   };
