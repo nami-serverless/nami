@@ -1,6 +1,7 @@
 const deleteApiResource = require('../aws/deleteApiResource');
 const deleteLambda = require('../aws/deleteLambda');
 const deleteSQS = require('../aws/deleteSQS');
+const deleteDLQ = require('../aws/deleteDLQ');
 const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
 const terminateEC2Instance = require('../aws/terminateEC2Instance');
 const deleteSecurityGroup = require('../aws/deleteSecurityGroup');
@@ -20,8 +21,10 @@ module.exports = async function destroy(resourceName, options, homedir) {
   console.log('Security groups deleted');
   await deleteEventSourceMapping(resourceName);
 
+  await deleteDLQ(resourceName, homedir);
+  console.log('DLQ deleted');
   await deleteSQS(resourceName, homedir);
-  console.log('SQS queue deleted');
+  console.log('SQS deleted');
 
   await deleteLambda(preLambda);
   await deleteLambda(postLambda);
