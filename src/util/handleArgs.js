@@ -19,6 +19,7 @@ const getOptions = (flags) => {
 const commandsWithResource = [
   'deploy',
   'destroy',
+  'create',
 ];
 const commandWithResource = command => commandsWithResource.includes(command);
 

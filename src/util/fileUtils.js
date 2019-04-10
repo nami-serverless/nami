@@ -64,6 +64,11 @@ const writeTemplateToStage = async (lambdaName, template, homedir) => {
   await writeFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.js`, template);
 };
 
+const writeTemplateLocally = async(lambdaName, template) => {
+  await mkdir(`${process.cwd()}/${lambdaName}`);
+  await writeFile(`${process.cwd()}/${lambdaName}/${lambdaName}.js`, template);
+};
+
 const createKeyPairFile = async (homedir, namiKeyPair) => {
   const namiPath = getNamiPath(homedir);
   await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
@@ -101,4 +106,5 @@ module.exports = {
   writeResources,
   changePermissionsOnKeyPairFile,
   writeTemplateToStage,
+  writeTemplateLocally,
 };
