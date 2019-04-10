@@ -8,6 +8,8 @@ const apiVersion = 'latest';
 const { readConfig, getNamiPath } = require('./fileUtils');
 const homedir = os.homedir();
 
+const { writeTemplateToStage } = require('./fileUtils');
+
 const {
   readFile,
   writeFile,
@@ -34,13 +36,8 @@ const getTemplate = async (resourceName, templateType, instanceId) => {
   return lambdaTemplateWithQueueURL;
 };
 
-const writeTemplateLocally = async (lambdaName, template) => {
-  await mkdir(`${getNamiPath(homedir)}/staging/${lambdaName}`);
-  await writeFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.js`, template);
-};
-
 module.exports = async function createLocalLambda(resourceName, lambdaName, templateType, instanceId) {
   const template = await getTemplate(resourceName, templateType, instanceId);
 
-  await writeTemplateLocally(lambdaName, template);
+  await writeTemplateToStage(lambdaName, template, homedir);
 };
