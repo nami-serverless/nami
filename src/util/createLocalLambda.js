@@ -34,7 +34,7 @@ const getTemplate = async (templateType, isCustomTemplate, resourceName) => {
   return lambdaTemplate;
 }
 
-const replaceStringPreLambda = async function(template) {
+const replaceStringPreLambda = async function(template, resourceName) {
   const { accountNumber } = await readConfig(homedir);
   const queueURL = `https://sqs.${region}.amazonaws.com/${accountNumber}/${resourceName}SQS`;
   const lambdaTemplateWithRegion = template.replace('userRegion', region);
@@ -58,20 +58,21 @@ const generatePostLambdaTemplate = async function() {
   return replacePrivateIPPostLambda(template);
 };
 
-async function createLocalLambda(resourceName, lambdaName, templateType) {
+async function createLocalLambda(resourceName, lambdaName, templateType, instanceId) {
   let type = templateType.slice(0,1).toUpperCase().concat(templateType.slice(1));
   const path = `${process.cwd()}/${resourceName}${type}`;
-  let isCustomTemplate;
-
-  try {
-    await exists(path);
-    isCustomTemplate = true;
-  } catch (e) {
-    isCustomTemplate = false;
-  }
+  let isCustomTemplate = await exists(path);
+  let updatedTemplate;
 
   const template = await getTemplate(templateType, isCustomTemplate, resourceName);
-  await writeTemplateToStage(lambdaName, template, homedir);
+
+  if (templateType === 'preLambda') {
+    updatedTemplate = await replaceStringPreLambda(template, resourceName);
+  } else if (templateType === 'postLambda') {
+    updatedTemplate = await replacePrivateIPPostLambda(template, instanceId);
+  }
+
+  await writeTemplateToStage(lambdaName, updatedTemplate, homedir);
 };
 
 module.exports = {

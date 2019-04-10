@@ -13,18 +13,18 @@ const stageName = 'nami';
 
 module.exports = async function deploy(resourceName, options, homedir) {
   try {
-//    const defaultVpcID = await getDefaultVpcId();
+    const defaultVpcID = await getDefaultVpcId();
 
-//    const description = 'Security Group for Post Queue Lambda in Nami Framework';
-//    const groupName = `${resourceName}PostLambdaSecurityGroup`;
-//    const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
+    const description = 'Security Group for Post Queue Lambda in Nami Framework';
+    const groupName = `${resourceName}PostLambdaSecurityGroup`;
+    const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
 
-//    const instanceId = await deployEC2(resourceName, homedir);
+    const instanceId = await deployEC2(resourceName, homedir);
     await deployPreLambda(resourceName, homedir);
-//    await deployApi(resourceName, homedir, httpMethods, stageName);
-//    await deployDLQ(resourceName);
-//    await deploySQS(resourceName, homedir);
-//    await deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId);
+    await deployApi(resourceName, homedir, httpMethods, stageName);
+    await deployDLQ(resourceName);
+    await deploySQS(resourceName, homedir);
+    await deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId);
   } catch (err) {
     namiLog(err);
   }

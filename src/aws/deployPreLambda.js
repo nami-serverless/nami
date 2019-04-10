@@ -22,7 +22,6 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
   const templateType = 'preLambda';
 
   await createLocalLambda(resourceName, lambdaName, templateType);
-  // replace string
   await installLambdaDependencies(lambdaName);
   await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
