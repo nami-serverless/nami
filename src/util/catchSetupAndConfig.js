@@ -11,9 +11,7 @@ module.exports = async function catchSetupAndConfig(homedir, command) {
   const namiDirExists = await exists(namiPath);
 
   if (!namiDirExists && command === 'deploy') {
-    const isInitialized = await init(homedir);
-
-    if (!isInitialized) return false;
+    await init(homedir);
   }
 
   return true;

@@ -7,7 +7,7 @@ const terminateEC2Instance = require('../aws/terminateEC2Instance');
 const deleteSecurityGroup = require('../aws/deleteSecurityGroup');
 const { doesAPIResourceExist } = require('../aws/doesResourceExist');
 
-module.exports = async function destroy(resourceName, options, homedir) {
+module.exports = async function destroy(resourceName, homedir) {
   const preLambda = `${resourceName}PreLambda`;
   const postLambda = `${resourceName}PostLambda`;
   const securityGroupEC2 = `${resourceName}EC2SecurityGroup`;

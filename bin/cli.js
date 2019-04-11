@@ -11,24 +11,26 @@ const homedir = os.homedir();
 (async () => {
   try {
     let resourceName;
-    let options = {};
-    let invalidNameOrFlag;
+    let invalidName;
+    let resourceExists;
 
-    if (args) ({ resourceName, options, invalidNameOrFlag, resourceExists } = await handleArgs(args, command, homedir));
+    if (args.length === 1) {
+      ({ resourceName, invalidName, resourceExists } = await handleArgs(args, command, homedir));
 
-    if (resourceExists) {
-      console.log(`${resourceName} endpoint already exists.`);
+      if (invalidName) { return; }
+
+      if (resourceExists && command === 'deploy') {
+        console.log(`${resourceName} endpoint already exists`);
+        return;
+      }
+    } else if (args.length > 1) {
+      console.log('Invalid command - too many arguments');
       return;
     }
 
-    const shouldContinue = (await catchSetupAndConfig(homedir, command));
-
-    if (!shouldContinue || invalidNameOrFlag) {
-      namiLog('goodbye!');
-      return;
-    };
-    await executeCommand(command, resourceName, options, homedir);
+    await catchSetupAndConfig(homedir, command);
+    await executeCommand(command, resourceName, homedir);
   } catch (err) {
-    namiLog(`Command Line Interface error => ${err.message}`)
+    namiLog(`Command Line Interface error => ${err.message}`);
   }
 })();
