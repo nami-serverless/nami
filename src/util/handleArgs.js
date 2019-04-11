@@ -1,4 +1,5 @@
 const namiLog = require('./logger');
+const { doesAPIResourceExist } = require('./../aws/doesResourceExist');
 
 const getOptions = (flags) => {
   const options = {};
@@ -25,9 +26,10 @@ const commandWithResource = command => commandsWithResource.includes(command);
 
 let invalidNameOrFlag = false;
 
-module.exports = function handleArgs(args, command) {
+module.exports = async function handleArgs(args, command, homedir) {
   let options;
   let resourceName = '';
+  let resourceExists = false;
 
   if (commandWithResource(command)) {
     [resourceName, ...options] = args;
@@ -36,16 +38,23 @@ module.exports = function handleArgs(args, command) {
     options = getOptions(args);
   }
 
+  const apiResourceExists = await doesAPIResourceExist(resourceName, homedir);
+
   if (!resourceName && Object.keys(options).length === 0) {
     namiLog('invalid name or flag');
     invalidNameOrFlag = true;
   } else {
     resourceName = resourceName.toLowerCase();
+
+    if (apiResourceExists && (['deploy', 'create'].includes(command))) {
+      resourceExists = true;
+    }
   }
 
   return {
     resourceName,
     options,
     invalidNameOrFlag,
+    resourceExists,
   };
 };

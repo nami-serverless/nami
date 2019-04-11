@@ -14,7 +14,12 @@ const homedir = os.homedir();
     let options = {};
     let invalidNameOrFlag;
 
-    if (args) ({ resourceName, options, invalidNameOrFlag } = handleArgs(args, command));
+    if (args) ({ resourceName, options, invalidNameOrFlag, resourceExists } = await handleArgs(args, command, homedir));
+
+    if (resourceExists) {
+      console.log(`${resourceName} endpoint already exists.`);
+      return;
+    }
 
     const shouldContinue = (await catchSetupAndConfig(homedir, command));
 

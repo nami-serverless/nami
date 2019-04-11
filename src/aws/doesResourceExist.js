@@ -29,7 +29,7 @@ const doesAPIResourceExist = async (resourceName, homedir) => {
 
     return !!(resources.items.find(item => item.pathPart === `${resourceName}`));
   } catch (err) {
-    return false;
+    console.log(`${err.message}`);
   }
 };
 
