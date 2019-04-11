@@ -1,7 +1,7 @@
 const namiLog = require('./../util/logger');
 const { readResources } = require('./../util/fileUtils');
 const { asyncGetResources } = require('./../aws/awsFunctions');
-const { getRegion } = require('./../util/getRegion');
+const getRegion = require('./../util/getRegion');
 
 
 module.exports = async function list(homedir) {

@@ -1,5 +1,5 @@
 const { asyncDeleteQueue } = require('./awsFunctions');
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const { readConfig } = require('../util/fileUtils');
 
 module.exports = async function deleteDLQ(resourceName, homedir) {

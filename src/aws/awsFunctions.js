@@ -1,7 +1,7 @@
 const { promisify } = require('util');
 const AWS = require('aws-sdk')
 const apiVersion = 'latest';
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const region = getRegion();
 
 const lambda = new AWS.Lambda({ apiVersion, region });

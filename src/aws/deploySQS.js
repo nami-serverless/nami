@@ -1,4 +1,4 @@
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const region = getRegion();
 
 const { readConfig } = require('../util/fileUtils');

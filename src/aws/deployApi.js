@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const createApiGatewayIntegration = require('./createApiGatewayIntegration');
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const { readResources, writeResources } = require('../util/fileUtils');
 const namiLog = require('./../util/logger');
 

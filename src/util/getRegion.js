@@ -1,5 +1,6 @@
 const os = require('os');
 const { readFileSync } = require('fs');
+
 const homedir = os.homedir();
 
 const getRegionFromConfigStr = (configStr) => {
@@ -9,16 +10,11 @@ const getRegionFromConfigStr = (configStr) => {
   return region;
 };
 
-const getRegion = () => {
+module.exports = function getRegion() {
   try {
     const configStr = readFileSync(`${homedir}/.aws/config`, 'utf8');
     return getRegionFromConfigStr(configStr);
   } catch (err) {
     return false;
   }
-};
-
-
-module.exports = {
-  getRegion,
 };

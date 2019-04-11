@@ -3,7 +3,7 @@ const fs = require('fs');
 const { readConfig, getNamiPath } = require('../util/fileUtils');
 
 const { zipper } = require('../util/zipper');
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const { createLocalLambda } = require('./../util/createLocalLambda');
 const installLambdaDependencies = require('./../util/installLambdaDependencies');
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const os = require('os');
-const { getRegion } = require('../util/getRegion');
+const getRegion = require('../util/getRegion');
 const region = getRegion();
 
 const apiVersion = 'latest';
