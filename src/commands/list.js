@@ -5,26 +5,32 @@ const getRegion = require('./../util/getRegion');
 
 
 module.exports = async function list(homedir) {
-  // read rest API id from nami hidden folder
-  // use getResources to retrieve all resources associated with the apigw endpoint
-  // resource indicates available system / endpoint.
-  const { restApiId } = await readResources(homedir);
-  const getResourcesParams = {
-    restApiId,
-  };
-  const namiApiGwResources = await asyncGetResources(getResourcesParams);
-  let endpoint;
-  const region = getRegion();
+  const noActiveEndpointError = 'You have no current active endpoints';
 
-  if (namiApiGwResources.items.length === 0) {
-    namiLog('You have no current active endpoints');
-  } else {
-    namiLog('Your resources are:');
-    namiApiGwResources.items.forEach((item) => {
-      if (item.pathPart !== undefined) {
-        endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/nami/${item.pathPart}`;
-        namiLog(`${item.pathPart} : ${endpoint}`);
-      }
-    });
+  try {
+    const { restApiId } = await readResources(homedir);
+
+    const getResourcesParams = {
+      restApiId,
+    };
+
+    const namiApiGwResources = await asyncGetResources(getResourcesParams);
+
+    let endpoint;
+    const region = getRegion();
+
+    if (namiApiGwResources.items.length === 0) {
+      namiLog(noActiveEndpointError);
+    } else {
+      namiLog('Your resources are:');
+      namiApiGwResources.items.forEach((item) => {
+        if (item.pathPart !== undefined) {
+          endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/nami/${item.pathPart}`;
+          namiLog(`${item.pathPart} : ${endpoint}`);
+        }
+      });
+    }
+  } catch (err) {
+    console.log(noActiveEndpointError);
   }
 };
