@@ -7,11 +7,10 @@ const {
   copyEC2SetupScript,
 } = require('./fileUtils');
 
-module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
+module.exports = async function setupNamiDirAndFiles(homePath) {
   const accountNumber = (await asyncGetCallerIdentity()).Account;
   const configJSON = {
     accountNumber,
-    role: roleName,
   };
 
   const resourcesJSON = {
@@ -26,7 +25,6 @@ module.exports = async function setupNamiDirAndFiles(roleName, homePath) {
     await createJSONFile('config', namiPath, configJSON);
     await createJSONFile('resources', namiPath, resourcesJSON);
     await copyEC2SetupScript(namiPath, scriptLocation);
-    // need config file for SQS?
   } catch (err) {
     console.log('Error setting up framework directory and files => ', err.message);
   }

@@ -3,8 +3,8 @@ const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRole
 const { doesRoleExist } = require('./../aws/doesResourceExist');
 const sleep = require('./sleep');
 
-module.exports = async function init(roleName, homedir) {
-  await setupNamiDirAndFiles(roleName, homedir);
+module.exports = async function init(homedir) {
+  await setupNamiDirAndFiles(homedir);
 
   const preLambdaRoleName = 'namiPreLambda';
   const postLambdaRoleName = 'namiPostLambda';
