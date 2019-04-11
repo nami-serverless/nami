@@ -1,8 +1,7 @@
 const os = require('os');
 const getMostRecentUbuntuImageId = require('./../util/getMostRecentUbuntuImageId');
-const createSecurityGroup = require('./../util/createSecurityGroup');
-const getDefaultVpcId = require('./../util/getDefaultVpcId');
 const namiLog = require('./../util/logger');
+const deploySecurityGroup = require('./deploySecurityGroup');
 
 const {
   asyncCreateKeyPair,
@@ -37,11 +36,7 @@ module.exports = async function deployEC2(resourceName, homedir) {
 
   const imageId = await getMostRecentUbuntuImageId();
 
-  const defaultVpcID = await getDefaultVpcId();
-
-  const description = 'Security Group for EC2 Instance in Nami Framework';
-  const groupName = `${resourceName}EC2SecurityGroup`;
-  const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
+  const SecurityGroupId = await deploySecurityGroup(resourceName, 'ec2');
 
   const authorizeSecurityGroupIngressParams = {
     GroupId: SecurityGroupId,
