@@ -6,3 +6,4 @@ package-lock.json
 .stCommitMsg
 nami.pem
 testvariables.js
+*Lambda/
