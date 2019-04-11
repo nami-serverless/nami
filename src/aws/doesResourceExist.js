@@ -1,3 +1,6 @@
+const { readResources } = require('./../util/fileUtils');
+const { asyncGetResources } = require('./awsFunctions');
+
 const { asyncGetRole, asyncGetPolicy } = require('./awsFunctions');
 
 const doesRoleExist = async (roleName) => {
@@ -18,7 +21,20 @@ const doesPolicyExist = async (policyArn) => {
   }
 };
 
+const doesAPIResourceExist = async (resourceName, homedir) => {
+  try {
+    const { restApiId } = await readResources(homedir);
+    const apiGetResourcesParams = { restApiId };
+    const resources = await asyncGetResources(apiGetResourcesParams);
+
+    return !!(resources.items.find(item => item.pathPart === `${resourceName}`));
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   doesRoleExist,
   doesPolicyExist,
- };
+  doesAPIResourceExist,
+};
