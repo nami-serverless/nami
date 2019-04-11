@@ -35,21 +35,21 @@ module.exports = async function handleArgs(args, command, homedir) {
   if (commandWithResource(command)) {
     [resourceName, ...options] = args;
     options = getOptions(options);
+
+    const apiResourceExists = await doesAPIResourceExist(resourceName, homedir);
+
+    if (!isValidResourceName(resourceName) && Object.keys(options).length === 0) {
+      namiLog('Resource name must be between 1 and 64 characters in length. It may only contain alphanumeric characters or - or _.');
+      invalidNameOrFlag = true;
+    } else {
+      resourceName = resourceName.toLowerCase();
+
+      if (apiResourceExists && (['deploy', 'create'].includes(command))) {
+        resourceExists = true;
+      }
+    }
   } else {
     options = getOptions(args);
-  }
-
-  const apiResourceExists = await doesAPIResourceExist(resourceName, homedir);
-
-  if (!isValidResourceName(resourceName) && Object.keys(options).length === 0) {
-    namiLog('Resource name must be between 1 and 64 characters in length. It may only contain alphanumeric characters or - or _.');
-    invalidNameOrFlag = true;
-  } else {
-    resourceName = resourceName.toLowerCase();
-
-    if (apiResourceExists && (['deploy', 'create'].includes(command))) {
-      resourceExists = true;
-    }
   }
 
   return {
