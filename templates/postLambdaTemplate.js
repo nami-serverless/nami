@@ -1,6 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
 const { promisify } = require('util');
 
+// Please do not modify the below line. 'privateIp' will be replaced
+// with the actual EC2 IP address when deploying
 const uri = 'mongodb://privateIp:27017';
 let cachedDb;
 
