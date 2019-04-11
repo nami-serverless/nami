@@ -16,11 +16,15 @@ module.exports = async function list(homedir) {
   let endpoint;
   const region = getRegion();
 
-  namiLog('Your resources are:');
-  namiApiGwResources.items.forEach((item) => {
-    if (item.pathPart !== undefined) {
-      endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/nami/${item.pathPart}`;
-      namiLog(`${item.pathPart} : ${endpoint}`);
-    }
-  });
+  if (namiApiGwResources.items.length === 0) {
+    namiLog('You have no current active endpoints');
+  } else {
+    namiLog('Your resources are:');
+    namiApiGwResources.items.forEach((item) => {
+      if (item.pathPart !== undefined) {
+        endpoint = `https://${restApiId}.execute-api.${region}.amazonaws.com/nami/${item.pathPart}`;
+        namiLog(`${item.pathPart} : ${endpoint}`);
+      }
+    });
+  }
 };
