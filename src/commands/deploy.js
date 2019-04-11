@@ -10,8 +10,9 @@ const deploySecurityGroup = require('./../aws/deploySecurityGroup');
 const httpMethods = ['POST'];
 const stageName = 'nami';
 
-module.exports = async function deploy(resourceName, options, homedir) {
+module.exports = async function deploy(resourceName, homedir) {
   try {
+    namiLog('Starting deployment sequence');
     const SecurityGroupId = await deploySecurityGroup(resourceName, 'lambda');
     const instanceId = await deployEC2(resourceName, homedir);
     await deployPreLambda(resourceName, homedir);
