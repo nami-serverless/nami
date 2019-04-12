@@ -1,8 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const { promisify } = require('util');
 
-// Please do not modify the below line. 'privateIp' will be replaced
-// with the actual EC2 IP address when deploying
+// Please do not modify the below line.
 const uri = 'mongodb://privateIp:27017';
 let cachedDb;
 
@@ -46,11 +45,10 @@ exports.handler = async (event, context) => {
 
   // Insert custom code here.
   // event.Records[i].body represents the webhook payload.
-
   // This Lambda function is set for 5 concurrent executions to throttle
   // connections to the database.
   // Feel free to process your webhook payload in any way you see fit.
-
+  
   try {
     const database = await connectToDatabase();
     console.log('connected to mongo');
