@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { promisify } = require('util');
+const rimraf = require('rimraf');
 
 const mkdir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
@@ -8,6 +9,8 @@ const copyFile = promisify(fs.copyFile);
 const changePermissions = promisify(fs.chmod);
 
 // clean up homedir parameters
+
+const promisifiedRimraf = dir => new Promise(res => rimraf(dir, res));
 
 const exists = async path => (
   new Promise((res) => {
@@ -107,4 +110,5 @@ module.exports = {
   changePermissionsOnKeyPairFile,
   writeTemplateToStage,
   writeTemplateLocally,
+  promisifiedRimraf,
 };
