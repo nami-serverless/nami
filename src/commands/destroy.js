@@ -5,7 +5,6 @@ const deleteDLQ = require('../aws/deleteDLQ');
 const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
 const terminateEC2Instance = require('../aws/terminateEC2Instance');
 const deleteSecurityGroup = require('../aws/deleteSecurityGroup');
-const { doesAPIResourceExist } = require('../aws/doesResourceExist');
 
 module.exports = async function destroy(resourceName, homedir) {
   const preLambda = `${resourceName}PreLambda`;
@@ -13,30 +12,18 @@ module.exports = async function destroy(resourceName, homedir) {
   const securityGroupEC2 = `${resourceName}EC2SecurityGroup`;
   const securityGroupPostLambda = `${resourceName}PostLambdaSecurityGroup`;
 
-  const resourceExists = await doesAPIResourceExist(resourceName, homedir);
+  await terminateEC2Instance(resourceName);
 
-  if (resourceExists) {
-    console.log('Waiting for EC2 instance to terminate')
-    await terminateEC2Instance(resourceName);
-    console.log('EC2 instance terminated. EBS volume persists for data preservation');
+  await deleteSecurityGroup(securityGroupEC2);
+  await deleteSecurityGroup(securityGroupPostLambda);
 
-    await deleteSecurityGroup(securityGroupEC2);
-    await deleteSecurityGroup(securityGroupPostLambda);
-    console.log('Security groups deleted');
-    await deleteEventSourceMapping(resourceName);
+  await deleteEventSourceMapping(resourceName);
 
-    await deleteDLQ(resourceName, homedir);
-    console.log('DLQ deleted');
-    await deleteSQS(resourceName, homedir);
-    console.log('SQS deleted');
+  await deleteDLQ(resourceName, homedir);
+  await deleteSQS(resourceName, homedir);
 
-    await deleteLambda(preLambda);
-    await deleteLambda(postLambda);
-    console.log('Lambda functions deleted');
+  await deleteLambda(preLambda);
+  await deleteLambda(postLambda);
 
-    await deleteApiResource(resourceName, homedir);
-    console.log(`API Gateway endpoint ${resourceName} deleted`);
-  } else {
-    console.log(`${resourceName} endpoint does not exist on AWS`);
-  }
+  await deleteApiResource(resourceName, homedir);
 };

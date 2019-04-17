@@ -5,5 +5,10 @@ module.exports = async function deleteSecurityGroup(securityGroupName) {
     GroupName: securityGroupName,
   };
 
-  await asyncDeleteSecurityGroup(deleteSecurityGroupParams);
+  try {
+    await asyncDeleteSecurityGroup(deleteSecurityGroupParams);
+    console.log(`Security group ${securityGroupName} deleted`);
+  } catch (e) {
+    console.log(e.message);
+  }
 };

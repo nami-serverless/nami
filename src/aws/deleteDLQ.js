@@ -13,6 +13,7 @@ module.exports = async function deleteDLQ(resourceName, homedir) {
 
   try {
     await asyncDeleteQueue(deleteQueueParams);
+    console.log('DLQ deleted');
   } catch (err) {
     console.log('DLQ delete Error =>', err.message);
   }

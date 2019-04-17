@@ -13,6 +13,7 @@ module.exports = async function deleteSQS(resourceName, homedir) {
 
   try {
     await asyncDeleteQueue(deleteQueueParams);
+    console.log('SQS deleted');
   } catch (err) {
     console.log('Delete Queue Error =>', err.message);
   }
