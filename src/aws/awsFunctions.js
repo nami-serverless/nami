@@ -43,6 +43,7 @@ const asyncDescribeSubnets = promisify(ec2.describeSubnets.bind(ec2));
 const asyncAuthorizeSecurityGroupIngress = promisify(ec2.authorizeSecurityGroupIngress.bind(ec2));
 const asyncTerminateInstances = promisify(ec2.terminateInstances.bind(ec2));
 const asyncDeleteSecurityGroup = promisify(ec2.deleteSecurityGroup.bind(ec2));
+const asyncDescribeSecurityGroups = promisify(ec2.describeSecurityGroups.bind(ec2));
 
 // sts
 const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
@@ -101,4 +102,5 @@ module.exports = {
   asyncAuthorizeSecurityGroupIngress,
   asyncTerminateInstances,
   asyncDeleteSecurityGroup,
+  asyncDescribeSecurityGroups,
 };
