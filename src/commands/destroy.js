@@ -5,12 +5,16 @@ const deleteDLQ = require('../aws/deleteDLQ');
 const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
 const terminateEC2Instance = require('../aws/terminateEC2Instance');
 const deleteSecurityGroup = require('../aws/deleteSecurityGroup');
+const deleteStagingDir = require('./../util/deleteStagingDir');
 
 module.exports = async function destroy(resourceName, homedir) {
   const preLambda = `${resourceName}PreLambda`;
   const postLambda = `${resourceName}PostLambda`;
   const securityGroupEC2 = `${resourceName}EC2SecurityGroup`;
   const securityGroupPostLambda = `${resourceName}PostLambdaSecurityGroup`;
+
+  await deleteStagingDir(preLambda, homedir);
+  await deleteStagingDir(postLambda, homedir);
 
   await terminateEC2Instance(resourceName);
 
