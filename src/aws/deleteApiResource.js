@@ -8,22 +8,27 @@ module.exports = async function deleteApiResource(resourceName, homedir) {
     restApiId,
   };
 
-  const namiApiGwResources = await asyncGetResources(getResourcesParams);
-
-  const resource = namiApiGwResources.items.find(item => (
-    item.pathPart === resourceName
-  ));
-
-  const resourceId = resource.id;
-
-  const deleteResourceParams = {
-    restApiId,
-    resourceId,
-  };
-
   try {
+    const namiApiGwResources = await asyncGetResources(getResourcesParams);
+
+    const resource = namiApiGwResources.items.find(item => (
+      item.pathPart === resourceName
+    ));
+
+    if (resource === undefined) {
+      throw new Error(`API Gateway endpoint ${resourceName} doesn't exist`);
+    }
+
+    const resourceId = resource.id;
+
+    const deleteResourceParams = {
+      restApiId,
+      resourceId,
+    };
+
     await asyncDeleteResource(deleteResourceParams);
+    console.log(`API Gateway endpoint ${resourceName} deleted`);
   } catch (err) {
-    console.log('Delete API Resource Error =>', err.message);
+    console.log(err.message);
   }
 };

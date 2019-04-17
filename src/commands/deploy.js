@@ -6,6 +6,7 @@ const deploySQS = require('../aws/deploySQS');
 const deployEC2 = require('../aws/deployEC2');
 const namiLog = require('./../util/logger');
 const deploySecurityGroup = require('./../aws/deploySecurityGroup');
+const destroy = require('./destroy');
 
 const httpMethods = ['POST'];
 const stageName = 'nami';
@@ -22,5 +23,7 @@ module.exports = async function deploy(resourceName, homedir) {
     await deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId);
   } catch (err) {
     namiLog(err);
+    namiLog('Cleaning up ...');
+    destroy(resourceName, homedir);
   }
 };
