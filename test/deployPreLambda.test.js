@@ -22,7 +22,7 @@ const {
 
 
 const region = getRegion();
-const resourceName = 'testNami';
+const resourceName = 'testNami2';
 const preLambdaName = `${resourceName}PreLambda`;
 const sqsName = `${resourceName}SQS`;
 const homedir = os.homedir();
