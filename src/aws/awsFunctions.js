@@ -19,6 +19,7 @@ const asyncListEventSourceMappings = promisify(lambda.listEventSourceMappings.bi
 const asyncDeleteEventSourceMapping = promisify(lambda.deleteEventSourceMapping.bind(lambda));
 const asyncCreateEventSourceMapping = promisify(lambda.createEventSourceMapping.bind(lambda));
 const asyncPutFunctionConcurrency = promisify(lambda.putFunctionConcurrency.bind(lambda));
+const asyncGetFunction = promisify(lambda.getFunction.bind(lambda));
 
 // api
 const asyncCreateDeployment = promisify(api.createDeployment.bind(api));
@@ -51,6 +52,7 @@ const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
 // sqs
 const asyncCreateSQS = promisify(sqs.createQueue.bind(sqs));
 const asyncDeleteQueue = promisify(sqs.deleteQueue.bind(sqs));
+const asyncGetQueueAttributes = promisify(sqs.getQueueAttributes.bind(sqs));
 
 // iam
 const asyncCreateRole = promisify(iam.createRole.bind(iam));
@@ -59,11 +61,6 @@ const asyncAttachPolicy = promisify(iam.attachRolePolicy.bind(iam));
 const asyncListRolePolicies = promisify(iam.listAttachedRolePolicies.bind(iam));
 const asyncGetPolicy = promisify(iam.getPolicy.bind(iam));
 const asyncGetRole = promisify(iam.getRole.bind(iam));
-// const asyncDetachPolicy = promisify(iam.detachRolePolicy.bind(iam));
-// const asyncDeleteRole = promisify(iam.deleteRole.bind(iam));
-// const asyncDeletePolicy = promisify(iam.deletePolicy.bind(iam));
-// const asyncListAttachedRolePolicies = promisify(iam.listAttachedRolePolicies.bind(iam));
-
 
 module.exports = {
   asyncCreateRole,
@@ -103,4 +100,6 @@ module.exports = {
   asyncTerminateInstances,
   asyncDeleteSecurityGroup,
   asyncDescribeSecurityGroups,
+  asyncGetFunction,
+  asyncGetQueueAttributes,
 };

@@ -1,7 +1,11 @@
 const { readResources } = require('./../util/fileUtils');
-const { asyncGetResources } = require('./awsFunctions');
 
-const { asyncGetRole, asyncGetPolicy } = require('./awsFunctions');
+const { 
+  asyncGetRole, 
+  asyncGetPolicy, 
+  asyncGetResources, 
+  asyncGetFunction 
+} = require('./awsFunctions');
 
 const doesRoleExist = async (roleName) => {
   try {
@@ -33,8 +37,18 @@ const doesAPIResourceExist = async (resourceName, homedir) => {
   }
 };
 
+const doesLambdaExist = async (FunctionName) => {
+  try {
+    await asyncGetFunction({ FunctionName });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   doesRoleExist,
   doesPolicyExist,
   doesAPIResourceExist,
+  doesLambdaExist,
 };
