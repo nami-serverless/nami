@@ -1,10 +1,11 @@
 const { readResources } = require('./../util/fileUtils');
 
-const { 
-  asyncGetRole, 
-  asyncGetPolicy, 
-  asyncGetResources, 
-  asyncGetFunction 
+const {
+  asyncGetRole,
+  asyncGetPolicy,
+  asyncGetResources,
+  asyncGetFunction,
+  asyncListQueues,
 } = require('./awsFunctions');
 
 const doesRoleExist = async (roleName) => {
@@ -46,9 +47,21 @@ const doesLambdaExist = async (FunctionName) => {
   }
 };
 
+const doesQueueExist = async (resourceName, queueType) => {
+  try {
+    const queueName = `${resourceName}${queueType}`;
+    const regex = RegExp(queueName);
+    const data = await asyncListQueues({ QueueNamePrefix: queueName });
+    return !!(data.QueueUrls.find(url => regex.test(url)));
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   doesRoleExist,
   doesPolicyExist,
   doesAPIResourceExist,
   doesLambdaExist,
+  doesQueueExist,
 };

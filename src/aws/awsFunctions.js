@@ -53,6 +53,7 @@ const asyncGetCallerIdentity = promisify(sts.getCallerIdentity.bind(sts));
 const asyncCreateSQS = promisify(sqs.createQueue.bind(sqs));
 const asyncDeleteQueue = promisify(sqs.deleteQueue.bind(sqs));
 const asyncGetQueueAttributes = promisify(sqs.getQueueAttributes.bind(sqs));
+const asyncListQueues = promisify(sqs.listQueues.bind(sqs));
 
 // iam
 const asyncCreateRole = promisify(iam.createRole.bind(iam));
@@ -102,4 +103,5 @@ module.exports = {
   asyncDescribeSecurityGroups,
   asyncGetFunction,
   asyncGetQueueAttributes,
+  asyncListQueues,
 };
