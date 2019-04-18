@@ -9,7 +9,7 @@ describe('deploySecurityGroup', () => {
   let defaultVpcID;
 
   beforeAll(async () => {
-    securityGroupId = await deploySecurityGroup('test', 'ec2');
+    securityGroupId = await deploySecurityGroup('test2', 'ec2');
     const describeSecurityGroupsParams = { GroupIds: [securityGroupId] };
     const testSecurityGroups = await asyncDescribeSecurityGroups(describeSecurityGroupsParams);
     testSecurityGroup = testSecurityGroups.SecurityGroups[0];
@@ -25,7 +25,7 @@ describe('deploySecurityGroup', () => {
   });
 
   test('security group has appropriate name for type', async () => {
-    expect(testSecurityGroup.GroupName).toEqual('testEC2SecurityGroup');
+    expect(testSecurityGroup.GroupName).toEqual('test2EC2SecurityGroup');
   });
 
   test('security group has default VPC id', async () => {
@@ -33,6 +33,6 @@ describe('deploySecurityGroup', () => {
   });
 
   afterAll(async () => {
-    await deleteSecurityGroup('testEC2SecurityGroup');
+    await deleteSecurityGroup('test2EC2SecurityGroup');
   });
 });
