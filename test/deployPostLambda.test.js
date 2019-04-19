@@ -7,15 +7,16 @@ const deployDLQ = require('../src/aws/deployDLQ');
 const deploySQS = require('../src/aws/deploySQS');
 const { doesLambdaExist } = require('../src/aws/doesResourceExist');
 const destroy = require('../src/commands/destroy');
-const { asyncInvokeLambda } = require('../src/aws/awsFunctions');
+const { asyncInvokeLambda, asyncSendMessage, asyncGetQueueAttributes } = require('../src/aws/awsFunctions');
 const sleep = require('../src/util/sleep');
+const terminateEC2Instance = require('../src/aws/terminateEC2Instance');
 
 const {
   getStagingPath,
   exists,
 } = require('../src/util/fileUtils');
 
-const resourceName = 'testNami5001';
+const resourceName = 'testNami8000';
 const postLambdaName = `${resourceName}PostLambda`;
 const homedir = os.homedir();
 const stagingPath = getStagingPath(homedir);
@@ -24,12 +25,14 @@ const stagingPath = getStagingPath(homedir);
 describe('Nami deploy Post Lambda', () => {
   let instanceId;
   let securityGroupId;
+  let queueUrl;
+  let queueUrlDLQ;
 
-  jest.setTimeout(90000);
+  jest.setTimeout(300000);
   beforeAll(async () => {
-    jest.setTimeout(90000);
-    await deployDLQ(resourceName);
-    await deploySQS(resourceName, homedir);
+    jest.setTimeout(300000);
+    queueUrlDLQ = await deployDLQ(resourceName);
+    queueUrl = await deploySQS(resourceName, homedir);
     securityGroupId = await deploySecurityGroup(resourceName, 'lambda');
     await sleep(65000);
     instanceId = await deployEC2(resourceName, homedir);
@@ -56,5 +59,24 @@ describe('Nami deploy Post Lambda', () => {
     };
     const data = await asyncInvokeLambda(asyncInvokeLambdaParams);
     expect(data.StatusCode).toBe(200);
+  });
+
+  test('Test retried messages go into DLQ', async () => {
+    const asyncSendMessageParams = {
+      MessageBody: JSON.stringify({}),
+      QueueUrl: queueUrl,
+    };
+    const getQueueAttributesParams = {
+      QueueUrl: queueUrlDLQ,
+      AttributeNames: [
+        'ApproximateNumberOfMessages',
+      ],
+    };
+    await terminateEC2Instance(resourceName);
+    await asyncSendMessage(asyncSendMessageParams);
+    await sleep(200000);
+    const queueInformation = await asyncGetQueueAttributes(getQueueAttributesParams);
+    const numberOfMessages = queueInformation.Attributes.ApproximateNumberOfMessages;
+    expect(numberOfMessages).toBe('1');
   });
 });

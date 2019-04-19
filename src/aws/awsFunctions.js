@@ -1,7 +1,8 @@
 const { promisify } = require('util');
-const AWS = require('aws-sdk')
-const apiVersion = 'latest';
+const AWS = require('aws-sdk');
 const getRegion = require('../util/getRegion');
+
+const apiVersion = 'latest';
 const region = getRegion();
 
 const lambda = new AWS.Lambda({ apiVersion, region });
@@ -56,6 +57,7 @@ const asyncDeleteQueue = promisify(sqs.deleteQueue.bind(sqs));
 const asyncGetQueueAttributes = promisify(sqs.getQueueAttributes.bind(sqs));
 const asyncListQueues = promisify(sqs.listQueues.bind(sqs));
 const asyncReceiveMessage = promisify(sqs.receiveMessage.bind(sqs));
+const asyncSendMessage = promisify(sqs.sendMessage.bind(sqs));
 
 // iam
 const asyncCreateRole = promisify(iam.createRole.bind(iam));
@@ -108,4 +110,5 @@ module.exports = {
   asyncListQueues,
   asyncReceiveMessage,
   asyncInvokeLambda,
+  asyncSendMessage,
 };
