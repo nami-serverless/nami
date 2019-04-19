@@ -20,6 +20,7 @@ const asyncDeleteEventSourceMapping = promisify(lambda.deleteEventSourceMapping.
 const asyncCreateEventSourceMapping = promisify(lambda.createEventSourceMapping.bind(lambda));
 const asyncPutFunctionConcurrency = promisify(lambda.putFunctionConcurrency.bind(lambda));
 const asyncGetFunction = promisify(lambda.getFunction.bind(lambda));
+const asyncInvokeLambda = promisify(lambda.invoke.bind(lambda));
 
 // api
 const asyncCreateDeployment = promisify(api.createDeployment.bind(api));
@@ -106,4 +107,5 @@ module.exports = {
   asyncGetQueueAttributes,
   asyncListQueues,
   asyncReceiveMessage,
+  asyncInvokeLambda,
 };
