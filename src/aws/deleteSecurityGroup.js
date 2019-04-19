@@ -17,7 +17,7 @@ module.exports = async function deleteSecurityGroup(securityGroupName) {
 
   try {
     await asyncDeleteSecurityGroup(deleteSecurityGroupParams);
-    while (group) {
+    while (group && securityGroupName.match(/EC2/)) {
       securityGroups = await asyncDescribeSecurityGroups();
       group = securityGroups.SecurityGroups.find(securityGroup => (
         securityGroup.GroupName === securityGroupName
