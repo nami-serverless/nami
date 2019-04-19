@@ -10,6 +10,12 @@ const sqs = new AWS.SQS({ region, apiVersion });
 exports.handler = async (event) => {
   const response = { statusCode: 200 };
 
+  /*
+
+  Please make sure to handle Authentication you wish to use
+
+  */
+
   // Please do not modify the params object.
   const params = {
     MessageBody: JSON.stringify(event),
