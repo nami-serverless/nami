@@ -5,7 +5,6 @@ const { promisify } = require('util');
 const uri = 'mongodb://privateIp:27017';
 let cachedDb;
 
-
 async function connectToDatabase() {
   const dbName = 'nami';
   console.log('=> connect to database');
@@ -23,22 +22,14 @@ async function connectToDatabase() {
 
 async function queryDatabase(database, event) {
   console.log('=> query database');
-
-  try {
-    event.Records.forEach((payload) => {
-      database.collection('namiCollection').insertOne({
-        event: payload.body,
-      });
+  event.Records.forEach((payload) => {
+    database.collection('namiCollection').insertOne({
+      event: payload,
     });
-
-    return { statusCode: 200, body: 'success' };
-  } catch (err) {
-    console.log('Query Database Error => ', err.message);
-    return { statusCode: 500, body: 'error' };
-  }
+  });
 }
 
-exports.handler = async (event, context) => {
+exports.handler = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   console.log('event records: ', event.Records);
@@ -48,13 +39,14 @@ exports.handler = async (event, context) => {
   // This Lambda function is set for 5 concurrent executions to throttle
   // connections to the database.
   // Feel free to process your webhook payload in any way you see fit.
-  
+
   try {
     const database = await connectToDatabase();
     console.log('connected to mongo');
     const result = await queryDatabase(database, event);
-    return result;
+    callback(null, result);
   } catch (err) {
-    console.log('Query Database Error => ', err.message);
+    console.log('Error => ', err.message);
+    callback(err);
   }
 };
