@@ -18,6 +18,6 @@ module.exports = async function deploySecurityGroup(resourceName, securityGroupT
     const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
     return SecurityGroupId;
   } catch (err) {
-    console.log(`Security group for ${resourceName}PostLambda could not be created.`);
+    console.log(`${groupName} could not be created.`);
   }
 };
