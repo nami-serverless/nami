@@ -3,19 +3,12 @@ const AWS = require('aws-sdk');
 
 const apiVersion = 'latest';
 
-// Please do not modify the below line.
-const region = 'userRegion';
+const region = 'userRegion'; // Please do not modify this line.
 
 const sqs = new AWS.SQS({ region, apiVersion });
 
 exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'nami rocks!',
-      input: event,
-    }),
-  };
+  const response = { statusCode: 200 };
 
   // Please do not modify the params object.
   const params = {
