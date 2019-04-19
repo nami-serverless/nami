@@ -15,8 +15,8 @@ module.exports = async function deleteSQS(resourceName, homedir) {
 
   try {
     await asyncDeleteQueue(deleteQueueParams);
-    namiLog('SQS deleted');
+    namiLog(`${resourceName}SQS deleted`);
   } catch (err) {
-    namiErr('Delete Queue Error =>', err.message);
+    namiErr('Delete Queue Error => ', err.message);
   }
 };

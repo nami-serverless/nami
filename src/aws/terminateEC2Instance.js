@@ -1,8 +1,8 @@
 const { asyncTerminateInstances } = require('./awsFunctions');
-const getInstanceId = require('./../util/getInstanceId');
-const sleep = require('./../util/sleep');
+const getInstanceId = require('../util/getInstanceId');
+const sleep = require('../util/sleep');
 
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 const namiErr = require('../util/errorLogger');
 
 module.exports = async function terminateEC2Instance(resourceName) {
@@ -29,7 +29,7 @@ module.exports = async function terminateEC2Instance(resourceName) {
         await sleep(2000);
       }
     } else {
-      throw new Error("EC2 instance doesn't exist");
+      throw new Error('EC2 instance does not exist');
     }
 
     namiLog('EC2 instance terminated. EBS volume persists for data preservation');

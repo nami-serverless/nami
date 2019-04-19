@@ -1,4 +1,4 @@
-const { readResources } = require('./../util/fileUtils');
+const { readResources } = require('../util/fileUtils');
 
 const {
   asyncGetRole,

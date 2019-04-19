@@ -1,6 +1,6 @@
-const { writeTemplateLocally, exists } = require('./../util/fileUtils');
-const { getTemplate } = require('./../util/createLocalLambda');
-const namiLog = require('./../util/logger');
+const { writeTemplateLocally, exists } = require('../util/fileUtils');
+const { getTemplate } = require('../util/createLocalLambda');
+const namiLog = require('../util/logger');
 
 module.exports = async function create(resourceName) {
   const preLambdaName = `${resourceName}PreLambda`;

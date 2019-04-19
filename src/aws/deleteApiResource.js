@@ -29,7 +29,7 @@ module.exports = async function deleteApiResource(resourceName, homedir) {
     };
 
     await asyncDeleteResource(deleteResourceParams);
-    namiLog(`API Gateway endpoint ${resourceName} deleted`);
+    namiLog(`API endpoint ${resourceName} deleted`);
   } catch (err) {
     namiErr(err.message);
   }

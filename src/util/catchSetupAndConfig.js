@@ -1,4 +1,3 @@
-// const getUserDefaults = require('./getUserDefaults');
 const init = require('./init');
 
 const {

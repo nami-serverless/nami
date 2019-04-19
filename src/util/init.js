@@ -1,9 +1,8 @@
 const setupNamiDirAndFiles = require('./setupNamiDirAndFiles');
 const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRoles');
-const { doesRoleExist } = require('./../aws/doesResourceExist');
+const { doesRoleExist } = require('../aws/doesResourceExist');
 const sleep = require('./sleep');
-
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 
 module.exports = async function init(homedir) {
   await setupNamiDirAndFiles(homedir);

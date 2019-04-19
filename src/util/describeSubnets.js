@@ -1,22 +1,22 @@
-const { asyncDescribeSubnets } = require('./../aws/awsFunctions');
+const { asyncDescribeSubnets } = require('../aws/awsFunctions');
 
 module.exports = async function describeSubnets(defaultVpcID) {
   const describeSubnetParams = {
     Filters: [
-       {
-      Name: "vpc-id",
-      Values: [
-         defaultVpcID
-      ]
-     }
-    ]
+      {
+        Name: 'vpc-id',
+        Values: [
+          defaultVpcID,
+        ],
+      },
+    ],
   };
 
-  let subnetIds = [];
+  const subnetIds = [];
   const vpcSubnet = await asyncDescribeSubnets(describeSubnetParams);
-  vpcSubnet.Subnets.forEach(function(subnetInfo) {
+  vpcSubnet.Subnets.forEach((subnetInfo) => {
     subnetIds.push(subnetInfo.SubnetId);
   });
 
-  return subnetIds.slice(0,2);
-}
+  return subnetIds.slice(0, 2);
+};

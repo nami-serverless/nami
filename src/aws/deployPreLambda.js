@@ -2,11 +2,11 @@ const { promisify } = require('util');
 const fs = require('fs');
 const { readConfig, getNamiPath } = require('../util/fileUtils');
 const { zipper } = require('../util/zipper');
-const { createLocalLambda } = require('./../util/createLocalLambda');
-const installLambdaDependencies = require('./../util/installLambdaDependencies');
+const { createLocalLambda } = require('../util/createLocalLambda');
+const installLambdaDependencies = require('../util/installLambdaDependencies');
 
 const readFile = promisify(fs.readFile);
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 const namiErr = require('../util/errorLogger');
 
 const {
@@ -47,6 +47,8 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
     namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    namiErr(`Error deploying ${lambdaName} => `, err.message);
+    namiErr(`Error deploying ${lambdaName} => ${err.message}`);
   }
+
+  return true;
 };

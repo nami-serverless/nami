@@ -1,6 +1,6 @@
 const os = require('os');
-const getMostRecentUbuntuImageId = require('./../util/getMostRecentUbuntuImageId');
-const namiLog = require('./../util/logger');
+const getMostRecentUbuntuImageId = require('../util/getMostRecentUbuntuImageId');
+const namiLog = require('../util/logger');
 const deploySecurityGroup = require('./deploySecurityGroup');
 
 const {
@@ -89,6 +89,6 @@ module.exports = async function deployEC2(resourceName, homedir) {
 
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
-  namiLog(`EC2 instance with Mongo deployed: ${instanceId}`);
+  namiLog(`EC2 instance with Mongo deployed: Instance ID ${instanceId}`);
   return instanceId;
 };

@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { getStagingPath } = require('./fileUtils');
 
-const namiErr = require('./../util/errorLogger');
+const namiErr = require('../util/errorLogger');
 
 const cwd = process.cwd();
 

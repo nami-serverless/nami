@@ -1,5 +1,5 @@
 const { asyncGetCallerIdentity } = require('../aws/awsFunctions');
-const namiErr = require('./../util/errorLogger');
+const namiErr = require('../util/errorLogger');
 
 const {
   createDirectory,

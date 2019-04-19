@@ -1,5 +1,5 @@
 const { asyncDeleteEventSourceMapping } = require('./awsFunctions');
-const getUUID = require('./../util/getUUID');
+const getUUID = require('../util/getUUID');
 
 module.exports = async function deleteEventSourceMapping(resourceName) {
   const UUID = await getUUID(resourceName);

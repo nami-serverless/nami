@@ -1,5 +1,5 @@
 const { asyncCreateSQS } = require('./awsFunctions');
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 
 module.exports = async function deployDLQ(resourceName) {
   const queueName = `${resourceName}DLQ`;

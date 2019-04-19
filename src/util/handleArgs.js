@@ -1,5 +1,5 @@
-const namiLog = require('./logger');
-const { doesAPIResourceExist } = require('./../aws/doesResourceExist');
+const namiErr = require('./errorLogger');
+const { doesAPIResourceExist } = require('../aws/doesResourceExist');
 const isValidResourceName = require('./isValidResourceName');
 
 const commandsWithResource = [
@@ -20,7 +20,7 @@ module.exports = async function handleArgs(args, command, homedir) {
     const apiResourceExists = await doesAPIResourceExist(resourceName, homedir);
 
     if (!isValidResourceName(resourceName)) {
-      namiLog('Resource name must be between 1 and 64 characters in length. It may only contain alphanumeric characters or - or _.');
+      namiErr('Resource name must be between 1 and 64 characters in length. It may only contain alphanumeric characters or - or _.');
       invalidName = true;
     } else {
       resourceName = resourceName.toLowerCase();

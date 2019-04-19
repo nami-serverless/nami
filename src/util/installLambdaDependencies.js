@@ -1,8 +1,8 @@
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const os = require('os');
-const homedir = os.homedir();
 
+const homedir = os.homedir();
 const {
   exists,
   readFile,

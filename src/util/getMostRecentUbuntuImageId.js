@@ -1,13 +1,13 @@
-const { asyncDescribeImages } = require('./../aws/awsFunctions.js');
+const { asyncDescribeImages } = require('../aws/awsFunctions.js');
 
-const sortImagesByDate = function (array) {
-  return array.sort(function (imageA, imageB) {
-    const dateA = new Date(imageA.CreationDate);
-    const dateB = new Date(imageB.CreationDate);
+const dateSorting = (imageA, imageB) => {
+  const dateA = new Date(imageA.CreationDate);
+  const dateB = new Date(imageB.CreationDate);
 
-    return dateB - dateA;
-  });
+  return dateB - dateA;
 };
+
+const sortImagesByDate = array => array.sort(dateSorting);
 
 module.exports = async function getMostRecentUbuntuImageId() {
   const describeImagesParams = {

@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 const copyFile = promisify(fs.copyFile);
 const changePermissions = promisify(fs.chmod);
 
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 
 const promisifiedRimraf = dir => new Promise(res => rimraf(dir, res));
 
@@ -76,7 +76,8 @@ const createKeyPairFile = async (homedir, namiKeyPair) => {
   const namiPath = getNamiPath(homedir);
   await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
   await writeFile(`${process.cwd()}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
-  namiLog(`${namiKeyPair.KeyName}.pem key pair file has been saved to your current directory. Do not delete this file. You will need it to connect via SSH to all EC2 instances created by Nami.`);
+  namiLog(`${namiKeyPair.KeyName}.pem key pair file has been saved in your current directory \n
+  Do not delete this file. You will need it to start SSH connections to all Nami EC2 instances`);
 };
 
 const changePermissionsOnKeyPairFile = async (homedir, namiKeyPair) => {

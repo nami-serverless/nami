@@ -1,5 +1,5 @@
-const createSecurityGroup = require('./../util/createSecurityGroup');
-const getDefaultVpcId = require('./../util/getDefaultVpcId');
+const createSecurityGroup = require('../util/createSecurityGroup');
+const getDefaultVpcId = require('../util/getDefaultVpcId');
 
 const namiErr = require('../util/errorLogger');
 

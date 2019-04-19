@@ -15,10 +15,7 @@ module.exports = async function getInstanceId(resourceName) {
     ],
   };
 
-  try {
-    const runningInstance = await asyncDescribeInstances(describeInstancesParams);
-
-    const instanceId = runningInstance.Reservations[0].Instances[0].InstanceId;
-    return instanceId;
-  } catch (err) {}
+  const runningInstance = await asyncDescribeInstances(describeInstancesParams);
+  const instanceId = runningInstance.Reservations[0].Instances[0].InstanceId;
+  return instanceId;
 };

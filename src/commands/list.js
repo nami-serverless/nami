@@ -1,9 +1,9 @@
-const { readResources } = require('./../util/fileUtils');
-const { asyncGetResources } = require('./../aws/awsFunctions');
-const getRegion = require('./../util/getRegion');
+const { readResources } = require('../util/fileUtils');
+const { asyncGetResources } = require('../aws/awsFunctions');
+const getRegion = require('../util/getRegion');
 
-const namiLog = require('./../util/logger');
-const namiErr = require('./../util/errorLogger');
+const namiLog = require('../util/logger');
+const namiErr = require('../util/errorLogger');
 
 module.exports = async function list(homedir) {
   const noActiveEndpointError = 'You have no current active endpoints';
@@ -21,7 +21,7 @@ module.exports = async function list(homedir) {
     const region = getRegion();
 
     if (namiApiGwResources.items.length === 0) {
-      namiLog(noActiveEndpointError);
+      namiErr(noActiveEndpointError);
     } else {
       namiLog('Your resources are:');
       namiApiGwResources.items.forEach((item) => {
@@ -32,6 +32,6 @@ module.exports = async function list(homedir) {
       });
     }
   } catch (err) {
-    namiErr(noActiveEndpointError);
+    namiErr(`${err.message}`);
   }
 };

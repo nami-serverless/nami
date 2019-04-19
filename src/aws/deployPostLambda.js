@@ -4,14 +4,14 @@ const { readConfig, getNamiPath } = require('../util/fileUtils');
 
 const { zipper } = require('../util/zipper');
 const getRegion = require('../util/getRegion');
-const { createLocalLambda } = require('./../util/createLocalLambda');
-const installLambdaDependencies = require('./../util/installLambdaDependencies');
+const { createLocalLambda } = require('../util/createLocalLambda');
+const installLambdaDependencies = require('../util/installLambdaDependencies');
 
-const describeSubnets = require('./../util/describeSubnets');
-const getDefaultVpcId = require('./../util/getDefaultVpcId');
+const describeSubnets = require('../util/describeSubnets');
+const getDefaultVpcId = require('../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
-const namiLog = require('./../util/logger');
+const namiLog = require('../util/logger');
 const namiErr = require('../util/errorLogger');
 
 const {
