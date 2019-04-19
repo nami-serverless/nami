@@ -8,16 +8,15 @@ const deploySQS = require('../src/aws/deploySQS');
 const { doesLambdaExist } = require('../src/aws/doesResourceExist');
 const destroy = require('../src/commands/destroy');
 const { asyncInvokeLambda } = require('../src/aws/awsFunctions');
+const sleep = require('../src/util/sleep');
 
 const {
   getStagingPath,
   exists,
-  readConfig,
 } = require('../src/util/fileUtils');
 
-const resourceName = 'testNami1008';
+const resourceName = 'testNami5001';
 const postLambdaName = `${resourceName}PostLambda`;
-const sqsName = `${resourceName}SQS`;
 const homedir = os.homedir();
 const stagingPath = getStagingPath(homedir);
 
@@ -26,12 +25,13 @@ describe('Nami deploy Post Lambda', () => {
   let instanceId;
   let securityGroupId;
 
-  jest.setTimeout(60000);
+  jest.setTimeout(90000);
   beforeAll(async () => {
-    jest.setTimeout(30000);
+    jest.setTimeout(90000);
     await deployDLQ(resourceName);
     await deploySQS(resourceName, homedir);
     securityGroupId = await deploySecurityGroup(resourceName, 'lambda');
+    await sleep(65000);
     instanceId = await deployEC2(resourceName, homedir);
     await deployPostLambda(resourceName, homedir, instanceId, securityGroupId);
   });
@@ -50,10 +50,11 @@ describe('Nami deploy Post Lambda', () => {
     expect(functionExists).toBe(true);
   });
 
-  test('Test connection to database', async() => {
+  test('Test connection to database', async () => {
     const asyncInvokeLambdaParams = {
       FunctionName: `${postLambdaName}`,
     };
     const data = await asyncInvokeLambda(asyncInvokeLambdaParams);
+    expect(data.StatusCode).toBe(200);
   });
 });
