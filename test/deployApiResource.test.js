@@ -12,6 +12,9 @@ const { doesAPIResourceExist } = require('../src/aws/doesResourceExist');
 const destroy = require('../src/commands/destroy');
 const sleep = require('./../src/util/sleep');
 
+const namiLog = require('./../src/util/logger');
+const namiErr = require('./../src/util/errorLogger');
+
 const preLambdaName = 'testNami';
 const homedir = os.homedir();
 const stageName = 'nami';
@@ -45,9 +48,9 @@ describe('nami deploy api resource', () => {
     try {
       response = await axios.post(endpoint);
     } catch (err) {
-      console.log(err);
+      namiErr(err);
     }
-    console.log(response);
+    namiLog(response);
     expect(response.status).toBe(200);
   });
 });

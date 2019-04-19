@@ -2,6 +2,8 @@ const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { getStagingPath } = require('./fileUtils');
 
+const namiErr = require('./../util/errorLogger');
+
 const cwd = process.cwd();
 
 const unzipper = async (lambdaName) => {
@@ -10,7 +12,7 @@ const unzipper = async (lambdaName) => {
   try {
     await exec(`unzip ${file}`, { cwd: `${cwd}/${lambdaName}` });
   } catch (err) {
-    console.log(err); // need to write to log
+    namiErr(err);
   }
 };
 
@@ -24,7 +26,7 @@ const zipper = async (lambdaName, homedir, directoryName) => {
   try {
     await exec(`zip -r ${lambdaName}.zip .`, { cwd: dir });
   } catch (err) {
-    console.log(err); // need to write to log
+    namiErr(err);
   }
 
   return `${dir}/${lambdaName}.zip`;

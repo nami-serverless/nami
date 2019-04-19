@@ -3,6 +3,8 @@ const {
   asyncAttachPolicy,
 } = require('./awsFunctions');
 
+const namiErr = require('../util/errorLogger');
+
 // prelambda and postlambda shared roles
 const AWSLambdaBasicExecutionRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole';
 const AWSLambdaRolePolicyARN = 'arn:aws:iam::aws:policy/service-role/AWSLambdaRole';
@@ -61,7 +63,7 @@ const createPreLambdaRole = async (name) => {
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {
-    console.log('Error creating PreLambdaRole => ', err.message);
+    namiErr('Error creating PreLambdaRole => ', err.message);
   }
 };
 
@@ -75,7 +77,7 @@ const createPostLambdaRole = async (name) => {
     await attachPolicy(name, AWSLambdaVPCAccessExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaSQSQueueExecutionRole);
   } catch (err) {
-    console.log('Error creating PostLambdaRole => ', err.message);
+    namiErr('Error creating PostLambdaRole => ', err.message);
   }
 };
 

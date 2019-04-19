@@ -1,5 +1,7 @@
 const { asyncDeleteResource, asyncGetResources } = require('./awsFunctions');
 const { readResources } = require('../util/fileUtils');
+const namiLog = require('../util/logger');
+const namiErr = require('../util/errorLogger');
 
 module.exports = async function deleteApiResource(resourceName, homedir) {
   const { restApiId } = await readResources(homedir);
@@ -27,8 +29,8 @@ module.exports = async function deleteApiResource(resourceName, homedir) {
     };
 
     await asyncDeleteResource(deleteResourceParams);
-    console.log(`API Gateway endpoint ${resourceName} deleted`);
+    namiLog(`API Gateway endpoint ${resourceName} deleted`);
   } catch (err) {
-    console.log(err.message);
+    namiErr(err.message);
   }
 };

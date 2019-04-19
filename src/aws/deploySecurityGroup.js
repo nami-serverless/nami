@@ -1,6 +1,8 @@
 const createSecurityGroup = require('./../util/createSecurityGroup');
 const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
+const namiErr = require('../util/errorLogger');
+
 module.exports = async function deploySecurityGroup(resourceName, securityGroupType) {
   const defaultVpcID = await getDefaultVpcId();
   let groupName;
@@ -18,6 +20,7 @@ module.exports = async function deploySecurityGroup(resourceName, securityGroupT
     const SecurityGroupId = await createSecurityGroup(description, groupName, defaultVpcID);
     return SecurityGroupId;
   } catch (err) {
-    console.log(`${groupName} could not be created.`);
+    namiErr(`${groupName} could not be created.`);
+    return err.message;
   }
 };

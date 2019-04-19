@@ -18,6 +18,8 @@ const eventObject = { body: 'webhook test message' };
 
 const homedir = os.homedir();
 
+const namiErr = require('./../src/util/errorLogger');
+
 describe('nami deploy SQS', () => {
   const resourceName = 'testing2';
   const queueType = 'SQS';
@@ -63,7 +65,7 @@ describe('nami deploy SQS', () => {
     try {
       await axios.post(endpoint, eventObject);
     } catch (err) {
-      console.log(err);
+      namiErr(err);
     }
 
     const messages = await asyncReceiveMessage({ QueueUrl, MaxNumberOfMessages: 1 });

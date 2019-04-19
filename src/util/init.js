@@ -3,6 +3,8 @@ const { createPreLambdaRole, createPostLambdaRole } = require('../aws/createRole
 const { doesRoleExist } = require('./../aws/doesResourceExist');
 const sleep = require('./sleep');
 
+const namiLog = require('./../util/logger');
+
 module.exports = async function init(homedir) {
   await setupNamiDirAndFiles(homedir);
 
@@ -13,13 +15,13 @@ module.exports = async function init(homedir) {
 
   if (!doesPreRoleNameExist) {
     await createPreLambdaRole(preLambdaRoleName);
-    console.log('Initializing first lambda role.');
+    namiLog('Initializing first lambda role.');
     await sleep(2500);
   }
 
   if (!doesPostRoleNameExist) {
     await createPostLambdaRole(postLambdaRoleName);
-    console.log('Initializing second lambda role.');
+    namiLog('Initializing second lambda role.');
     await sleep(2500);
   }
 

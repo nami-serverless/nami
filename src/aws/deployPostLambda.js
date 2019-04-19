@@ -12,6 +12,7 @@ const getDefaultVpcId = require('./../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
 const namiLog = require('./../util/logger');
+const namiErr = require('../util/errorLogger');
 
 const {
   asyncLambdaCreateFunction,
@@ -22,7 +23,12 @@ const {
 const lambdaRoleName = 'namiPostLambda';
 const lambdaDesc = 'Writes webhook payload to database.';
 
-module.exports = async function deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId) {
+module.exports = async function deployPostLambda(
+  resourceName,
+  homedir,
+  instanceId,
+  SecurityGroupId,
+) {
   const { accountNumber } = await readConfig(homedir);
   const lambdaName = `${resourceName}PostLambda`;
   const templateType = 'postLambda';
@@ -72,7 +78,7 @@ module.exports = async function deployPostLambda(resourceName, homedir, instance
     namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    console.log(`Error deploying ${lambdaName} => `, err.message);
+    namiErr(`Error deploying ${lambdaName} => `, err.message);
   }
 
   return true;

@@ -4,6 +4,7 @@ const catchSetupAndConfig = require('./../src/util/catchSetupAndConfig');
 const executeCommand = require('../src/commands/executeCommand');
 const handleArgs = require('./../src/util/handleArgs');
 const namiLog = require('./../src/util/logger');
+const namiErr = require('./../src/util/errorLogger');
 
 const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
@@ -20,11 +21,11 @@ const homedir = os.homedir();
       if (invalidName) { return; }
 
       if (resourceExists && command === 'deploy') {
-        console.log(`${resourceName} endpoint already exists`);
+        namiErr(`${resourceName} endpoint already exists`);
         return;
       }
     } else if (args.length > 1) {
-      console.log('Invalid command - too many arguments');
+      namiErr('Invalid command - too many arguments');
       return;
     }
 

@@ -1,4 +1,6 @@
 const sleep = require('./../util/sleep');
+const namiLog = require('../util/logger');
+const namiErr = require('../util/errorLogger');
 
 const {
   asyncDeleteSecurityGroup,
@@ -23,8 +25,8 @@ module.exports = async function deleteSecurityGroup(securityGroupName) {
       });
       await sleep(2000);
     }
-    console.log(`Security group ${securityGroupName} deleted`);
+    namiLog(`Security group ${securityGroupName} deleted`);
   } catch (e) {
-    console.log(e.message);
+    namiErr(e.message);
   }
 };

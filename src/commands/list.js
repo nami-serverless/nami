@@ -1,8 +1,9 @@
-const namiLog = require('./../util/logger');
 const { readResources } = require('./../util/fileUtils');
 const { asyncGetResources } = require('./../aws/awsFunctions');
 const getRegion = require('./../util/getRegion');
 
+const namiLog = require('./../util/logger');
+const namiErr = require('./../util/errorLogger');
 
 module.exports = async function list(homedir) {
   const noActiveEndpointError = 'You have no current active endpoints';
@@ -31,6 +32,6 @@ module.exports = async function list(homedir) {
       });
     }
   } catch (err) {
-    console.log(noActiveEndpointError);
+    namiErr(noActiveEndpointError);
   }
 };

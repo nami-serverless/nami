@@ -1,4 +1,5 @@
 const { asyncGetCallerIdentity } = require('../aws/awsFunctions');
+const namiErr = require('./../util/errorLogger');
 
 const {
   createDirectory,
@@ -26,6 +27,6 @@ module.exports = async function setupNamiDirAndFiles(homePath) {
     await createJSONFile('resources', namiPath, resourcesJSON);
     await copyEC2SetupScript(namiPath, scriptLocation);
   } catch (err) {
-    console.log('Error setting up framework directory and files => ', err.message);
+    namiErr('Error setting up framework directory and files => ', err.message);
   }
 };

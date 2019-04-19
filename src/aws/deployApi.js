@@ -3,6 +3,7 @@ const createApiGatewayIntegration = require('./createApiGatewayIntegration');
 const getRegion = require('../util/getRegion');
 const { readResources, writeResources } = require('../util/fileUtils');
 const namiLog = require('./../util/logger');
+const namiErr = require('./../util/errorLogger');
 
 const {
   asyncCreateApi,
@@ -77,6 +78,6 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
       methodPermissionIds,
     };
   } catch (err) {
-    console.log('Error deploying API => ', err.message);
+    namiErr('Error deploying API => ', err.message);
   }
 };

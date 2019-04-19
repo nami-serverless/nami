@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 const copyFile = promisify(fs.copyFile);
 const changePermissions = promisify(fs.chmod);
 
-// clean up homedir parameters
+const namiLog = require('./../util/logger');
 
 const promisifiedRimraf = dir => new Promise(res => rimraf(dir, res));
 
@@ -31,7 +31,7 @@ const createDirectory = async (name, path) => {
 };
 
 const createJSONFile = async (fileName, path, json) => {
-	const configStr = JSON.stringify(json, null, 2);
+  const configStr = JSON.stringify(json, null, 2);
   await writeFile(`${path}/${fileName}.json`, configStr);
 };
 
@@ -67,7 +67,7 @@ const writeTemplateToStage = async (lambdaName, template, homedir) => {
   await writeFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.js`, template);
 };
 
-const writeTemplateLocally = async(lambdaName, template) => {
+const writeTemplateLocally = async (lambdaName, template) => {
   await mkdir(`${process.cwd()}/${lambdaName}`);
   await writeFile(`${process.cwd()}/${lambdaName}/${lambdaName}.js`, template);
 };
@@ -76,7 +76,7 @@ const createKeyPairFile = async (homedir, namiKeyPair) => {
   const namiPath = getNamiPath(homedir);
   await writeFile(`${namiPath}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
   await writeFile(`${process.cwd()}/${namiKeyPair.KeyName}.pem`, namiKeyPair.KeyMaterial);
-  console.log(`${namiKeyPair.KeyName}.pem key pair file has been saved to your current directory. Do not delete this file. You will need it to connect via SSH to all EC2 instances created by Nami.`);
+  namiLog(`${namiKeyPair.KeyName}.pem key pair file has been saved to your current directory. Do not delete this file. You will need it to connect via SSH to all EC2 instances created by Nami.`);
 };
 
 const changePermissionsOnKeyPairFile = async (homedir, namiKeyPair) => {

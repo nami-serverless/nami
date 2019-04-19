@@ -2,6 +2,9 @@ const { asyncTerminateInstances } = require('./awsFunctions');
 const getInstanceId = require('./../util/getInstanceId');
 const sleep = require('./../util/sleep');
 
+const namiLog = require('./../util/logger');
+const namiErr = require('../util/errorLogger');
+
 module.exports = async function terminateEC2Instance(resourceName) {
   let ec2ShutdownComplete = false;
   let terminatedStatusCode;
@@ -15,7 +18,7 @@ module.exports = async function terminateEC2Instance(resourceName) {
     };
 
     if (instanceId) {
-      console.log('Waiting for EC2 instance to terminate');
+      namiLog('Waiting for EC2 instance to terminate');
       while (!ec2ShutdownComplete) {
         data = await asyncTerminateInstances(terminateInstancesParams);
         terminatedStatusCode = data.TerminatingInstances[0].CurrentState.Code;
@@ -29,8 +32,8 @@ module.exports = async function terminateEC2Instance(resourceName) {
       throw new Error("EC2 instance doesn't exist");
     }
 
-    console.log('EC2 instance terminated. EBS volume persists for data preservation');
+    namiLog('EC2 instance terminated. EBS volume persists for data preservation');
   } catch (err) {
-    console.log(err.message);
+    namiErr(err.message);
   }
 };

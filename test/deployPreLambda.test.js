@@ -31,6 +31,8 @@ const httpMethods = ['POST'];
 const stagingPath = getStagingPath(homedir);
 const eventObject = { body: 'webhook test message' };
 
+const namiErr = require('./../src/util/errorLogger');
+
 describe('nami deploy pre-queue lambda', () => {
   beforeEach(async () => {
     jest.setTimeout(120000);
@@ -67,7 +69,7 @@ describe('nami deploy pre-queue lambda', () => {
     try {
       await axios.post(endpoint, eventObject);
     } catch (err) {
-      console.log(err);
+      namiErr(err);
     }
 
     const getQueueAttributesParams = {

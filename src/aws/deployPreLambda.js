@@ -7,6 +7,7 @@ const installLambdaDependencies = require('./../util/installLambdaDependencies')
 
 const readFile = promisify(fs.readFile);
 const namiLog = require('./../util/logger');
+const namiErr = require('../util/errorLogger');
 
 const {
   asyncLambdaCreateFunction,
@@ -46,6 +47,6 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
     namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    console.log(`Error deploying ${lambdaName} => `, err.message);
+    namiErr(`Error deploying ${lambdaName} => `, err.message);
   }
 };
