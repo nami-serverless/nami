@@ -17,15 +17,6 @@ const doesRoleExist = async (roleName) => {
   }
 };
 
-const doesPolicyExist = async (policyArn) => {
-  try {
-    await asyncGetPolicy({ PolicyArn: policyArn });
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
-
 const doesAPIResourceExist = async (resourceName, homedir) => {
   try {
     const { restApiId } = await readResources(homedir);
@@ -60,7 +51,6 @@ const doesQueueExist = async (resourceName, queueType) => {
 
 module.exports = {
   doesRoleExist,
-  doesPolicyExist,
   doesAPIResourceExist,
   doesLambdaExist,
   doesQueueExist,

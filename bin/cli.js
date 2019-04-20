@@ -2,36 +2,37 @@
 const os = require('os');
 const catchSetupAndConfig = require('./../src/util/catchSetupAndConfig');
 const executeCommand = require('../src/commands/executeCommand');
-const handleArgs = require('./../src/util/handleArgs');
-const namiLog = require('./../src/util/logger');
 const namiErr = require('./../src/util/errorLogger');
+
+const {
+  validateResourceExists,
+  validateResourceName,
+  missingResourceName,
+} = require('../src/util/validations');
 
 const [,, command, ...args] = process.argv;
 const homedir = os.homedir();
 
 (async () => {
   try {
-    let resourceName;
-    let invalidName;
-    let resourceExists;
+    let [resourceName] = args;
+    resourceName = resourceName ? resourceName.toLowerCase() : '';
 
-    if (args.length === 1) {
-      ({ resourceName, invalidName, resourceExists } = await handleArgs(args, command, homedir));
+    if (args.length > 1) {
+      throw new Error('Invalid command - too many arguments');
+    }
 
-      if (invalidName) { return; }
-
-      if (resourceExists && command === 'deploy') {
-        namiErr(`${resourceName} endpoint already exists`);
-        return;
-      }
-    } else if (args.length > 1) {
-      namiErr('Invalid command - too many arguments');
-      return;
+    if (command === 'create' || command === 'deploy') {
+      await validateResourceExists(resourceName, homedir, command);
+      await validateResourceName(resourceName);
+    } else if (command === 'destroy') {
+      missingResourceName(resourceName);
+      await validateResourceExists(resourceName, homedir, command);
     }
 
     await catchSetupAndConfig(homedir, command);
     await executeCommand(command, resourceName, homedir);
   } catch (err) {
-    namiLog(`Command Line Interface error => ${err.message}`);
+    namiErr(`Command Line Interface error => ${err.message}`);
   }
 })();
