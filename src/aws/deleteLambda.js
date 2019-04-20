@@ -11,6 +11,6 @@ module.exports = async function deleteLambda(FunctionName) {
     await asyncDeleteFunction(deleteFunctionParams);
     namiLog(`${FunctionName} deleted`);
   } catch (err) {
-    namiErr('Delete Function Error => ', err.message);
+    namiErr(`Delete Function Error => ${err.message}`);
   }
 };

@@ -78,7 +78,7 @@ module.exports = async function deployPostLambda(
     namiLog(`${lambdaName} deployed`);
     return data;
   } catch (err) {
-    namiErr(`Error deploying ${lambdaName} => `, err.message);
+    namiErr(`Error deploying ${lambdaName} => ${err.message}`);
   }
 
   return true;

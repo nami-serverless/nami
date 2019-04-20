@@ -17,6 +17,6 @@ module.exports = async function deleteDLQ(resourceName, homedir) {
     await asyncDeleteQueue(deleteQueueParams);
     namiLog(`${resourceName}DLQ deleted`);
   } catch (err) {
-    namiErr('DLQ delete Error =>', err.message);
+    namiErr(`DLQ delete Error => ${err.message}`);
   }
 };

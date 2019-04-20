@@ -63,7 +63,7 @@ const createPreLambdaRole = async (name) => {
     await attachPolicy(name, AWSLambdaBasicExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaRolePolicyARN);
   } catch (err) {
-    namiErr('Error creating PreLambdaRole => ', err.message);
+    namiErr(`Error creating PreLambdaRole => ${err.message}`);
   }
 };
 
@@ -77,7 +77,7 @@ const createPostLambdaRole = async (name) => {
     await attachPolicy(name, AWSLambdaVPCAccessExecutionRolePolicyARN);
     await attachPolicy(name, AWSLambdaSQSQueueExecutionRole);
   } catch (err) {
-    namiErr('Error creating PostLambdaRole => ', err.message);
+    namiErr(`Error creating PostLambdaRole => ${err.message}`);
   }
 };
 

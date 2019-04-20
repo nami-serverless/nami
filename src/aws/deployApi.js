@@ -78,7 +78,7 @@ module.exports = async function deployApi(resourceName, homedir, httpMethods, st
       methodPermissionIds,
     };
   } catch (err) {
-    namiErr('Error deploying API => ', err.message);
+    namiErr(`Error deploying API => ${err.message}`);
     return err.message;
   }
 };
