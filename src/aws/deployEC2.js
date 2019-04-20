@@ -15,6 +15,8 @@ const {
   getNamiPath,
   readFile,
   changePermissionsOnKeyPairFile,
+  copyFile,
+  exists,
 } = require('../util/fileUtils');
 
 const namiPath = getNamiPath(os.homedir());
@@ -23,10 +25,19 @@ const KeyName = 'nami';
 
 
 module.exports = async function deployEC2(resourceName, homedir) {
+  let namiKeyPair;
+
   try {
     await asyncDescribeKeyPairs({ KeyNames: [`${KeyName}`] });
+    const destinationFile = `${process.cwd()}/nami.pem`;
+    const pemFileExists = await exists(destinationFile);
+    
+    if (!pemFileExists) {
+      const sourceFile = `${namiPath}/nami.pem`;
+      await copyFile(sourceFile, destinationFile);
+    }
   } catch (err) {
-    const namiKeyPair = await asyncCreateKeyPair({ KeyName });
+    namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
     await changePermissionsOnKeyPairFile(homedir, namiKeyPair);
   }
