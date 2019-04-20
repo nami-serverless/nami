@@ -1,5 +1,4 @@
-[Nami Header](https://i.imgur.com/kZhANSb.png)
-🌊
+![Nami Header](https://i.imgur.com/kZhANSb.png)
 
 Nami is a serverless framework for consuming webhooks at scale.
 
@@ -89,7 +88,7 @@ Due to the AWS services used by Nami and the nature of the HTTP request/response
 
 ### Security and SSH
 
-[Security Diagram](https://i.imgur.com/zzaagdY.png)
+![Security Diagram](https://i.imgur.com/zzaagdY.png)
 
 To conform to security best practices, the post-queue Lambda function and EC2 instance are both within their own security group to limit access. Users typically access AWS EC2 instances using SSH. Recognizing, however, that SSH isn't perfect, TCP port 22 is closed by default when users deploy instances of Nami. This can be opened by the user either by using the `authorize-security-group-ingress` [aws cli command](https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html), or by editing the inbound rules for the 'EC2SecurityGroup' to allow SSH from your desired IP source.
 
