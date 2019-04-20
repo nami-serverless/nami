@@ -12,7 +12,6 @@ const getDefaultVpcId = require('../util/getDefaultVpcId');
 
 const readFile = promisify(fs.readFile);
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 const {
   asyncLambdaCreateFunction,
@@ -42,44 +41,38 @@ module.exports = async function deployPostLambda(
 
   const subnetIds = await describeSubnets(defaultVpcID);
 
-  try {
-    const createFunctionParams = {
-      Code: {
-        ZipFile: zipContents,
-      },
-      FunctionName: `${lambdaName}`,
-      Handler: `${lambdaName}.handler`,
-      Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
-      Runtime: 'nodejs8.10',
-      Description: `${lambdaDesc}`,
-      VpcConfig: {
-        SecurityGroupIds: [SecurityGroupId],
-        SubnetIds: subnetIds,
-      },
-    };
+  const createFunctionParams = {
+    Code: {
+      ZipFile: zipContents,
+    },
+    FunctionName: `${lambdaName}`,
+    Handler: `${lambdaName}.handler`,
+    Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
+    Runtime: 'nodejs8.10',
+    Description: `${lambdaDesc}`,
+    VpcConfig: {
+      SecurityGroupIds: [SecurityGroupId],
+      SubnetIds: subnetIds,
+    },
+  };
 
-    const data = await asyncLambdaCreateFunction(createFunctionParams);
+  const data = await asyncLambdaCreateFunction(createFunctionParams);
 
-    const putFunctionConcurrencyParams = {
-      FunctionName: `${lambdaName}`,
-      ReservedConcurrentExecutions: 5,
-    };
+  const putFunctionConcurrencyParams = {
+    FunctionName: `${lambdaName}`,
+    ReservedConcurrentExecutions: 5,
+  };
 
-    await asyncPutFunctionConcurrency(putFunctionConcurrencyParams);
+  await asyncPutFunctionConcurrency(putFunctionConcurrencyParams);
 
-    const region = getRegion();
-    const eventSourceMappingParams = {
-      EventSourceArn: `arn:aws:sqs:${region}:${accountNumber}:${resourceName}SQS`,
-      FunctionName: `${lambdaName}`,
-      BatchSize: 1,
-    };
+  const region = getRegion();
+  const eventSourceMappingParams = {
+    EventSourceArn: `arn:aws:sqs:${region}:${accountNumber}:${resourceName}SQS`,
+    FunctionName: `${lambdaName}`,
+    BatchSize: 1,
+  };
 
-    await asyncCreateEventSourceMapping(eventSourceMappingParams);
-    namiLog(`${lambdaName} deployed`);
-    return data;
-  } catch (err) {
-    namiErr(`Error deploying ${lambdaName} => ${err.message}`);
-  }
-
-  return true;
+  await asyncCreateEventSourceMapping(eventSourceMappingParams);
+  namiLog(`${lambdaName} deployed`);
+  return data;
 };

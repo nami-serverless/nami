@@ -100,6 +100,6 @@ module.exports = async function deployEC2(resourceName, homedir) {
 
   const newInstance = await asyncRunInstances(instanceParams);
   const instanceId = newInstance.Instances[0].InstanceId;
-  namiLog(`EC2 instance with Mongo deployed: Instance ID ${instanceId}`);
+  namiLog('EC2 instance with MongoDB deployed');
   return instanceId;
 };

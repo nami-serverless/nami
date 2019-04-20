@@ -7,7 +7,6 @@ const installLambdaDependencies = require('../util/installLambdaDependencies');
 
 const readFile = promisify(fs.readFile);
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 const {
   asyncLambdaCreateFunction,
@@ -27,28 +26,22 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
   await zipper(lambdaName, homedir);
   const zipContents = await readFile(`${getNamiPath(homedir)}/staging/${lambdaName}/${lambdaName}.zip`);
 
-  try {
-    const createFunctionParams = {
-      Code: {
-        ZipFile: zipContents,
-      },
-      FunctionName: `${lambdaName}`,
-      Handler: `${lambdaName}.handler`,
-      MemorySize: 256,
-      Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
-      Runtime: 'nodejs8.10',
-      Description: `${lambdaDesc}`,
-      Tags: {
-        Nami: `${lambdaName}`,
-      },
-    };
+  const createFunctionParams = {
+    Code: {
+      ZipFile: zipContents,
+    },
+    FunctionName: `${lambdaName}`,
+    Handler: `${lambdaName}.handler`,
+    MemorySize: 256,
+    Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
+    Runtime: 'nodejs8.10',
+    Description: `${lambdaDesc}`,
+    Tags: {
+      Nami: `${lambdaName}`,
+    },
+  };
 
-    const data = await asyncLambdaCreateFunction(createFunctionParams);
-    namiLog(`${lambdaName} deployed`);
-    return data;
-  } catch (err) {
-    namiErr(`Error deploying ${lambdaName} => ${err.message}`);
-  }
-
-  return true;
+  const data = await asyncLambdaCreateFunction(createFunctionParams);
+  namiLog(`${lambdaName} deployed`);
+  return data;
 };

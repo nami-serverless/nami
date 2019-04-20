@@ -19,10 +19,12 @@ module.exports = async function deploy(resourceName, homedir) {
     const SecurityGroupId = await deploySecurityGroup(resourceName, securityGroupType);
     const instanceId = await deployEC2(resourceName, homedir);
     await deployPreLambda(resourceName, homedir);
-    await deployApi(resourceName, homedir, httpMethods, stageName);
+    const { endpoint } = await deployApi(resourceName, homedir, httpMethods, stageName);
     await deployDLQ(resourceName);
     await deploySQS(resourceName, homedir);
     await deployPostLambda(resourceName, homedir, instanceId, SecurityGroupId);
+    namiLog('Deployment sequence complete\n');
+    namiLog(`Your Nami endpoint is: \n\x1b[1m${endpoint}\x1b[0m`);
   } catch (err) {
     namiErr(`Deployment error => ${err.message}`);
     namiLog('Rolling back...');
