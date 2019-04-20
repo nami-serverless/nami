@@ -3,7 +3,6 @@ const getInstanceId = require('../util/getInstanceId');
 const sleep = require('../util/sleep');
 
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 module.exports = async function terminateEC2Instance(resourceName) {
   let ec2ShutdownComplete = false;
@@ -34,6 +33,7 @@ module.exports = async function terminateEC2Instance(resourceName) {
 
     namiLog('EC2 instance terminated. EBS volume persists for data preservation');
   } catch (err) {
-    namiErr(err.message);
+    return err;
   }
+  return true;
 };

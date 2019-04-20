@@ -6,6 +6,7 @@ const deleteEventSourceMapping = require('../aws/deleteEventSourceMapping');
 const terminateEC2Instance = require('../aws/terminateEC2Instance');
 const deleteSecurityGroup = require('../aws/deleteSecurityGroup');
 const deleteStagingDir = require('../util/deleteStagingDir');
+const namiLog = require('../util/logger');
 
 module.exports = async function destroy(resourceName, homedir) {
   const preLambda = `${resourceName}PreLambda`;
@@ -13,6 +14,7 @@ module.exports = async function destroy(resourceName, homedir) {
   const securityGroupEC2 = `${resourceName}EC2SecurityGroup`;
   const securityGroupPostLambda = `${resourceName}PostLambdaSecurityGroup`;
 
+  namiLog('Starting destroy sequence');
   await deleteStagingDir(preLambda, homedir);
   await deleteStagingDir(postLambda, homedir);
 
@@ -30,4 +32,5 @@ module.exports = async function destroy(resourceName, homedir) {
   await deleteLambda(postLambda);
 
   await deleteApiResource(resourceName, homedir);
+  namiLog('Destroy sequence complete');
 };

@@ -1,16 +1,15 @@
 const { asyncDeleteResource, asyncGetResources } = require('./awsFunctions');
 const { readResources } = require('../util/fileUtils');
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 module.exports = async function deleteApiResource(resourceName, homedir) {
-  const { restApiId } = await readResources(homedir);
-
-  const getResourcesParams = {
-    restApiId,
-  };
-
   try {
+    const { restApiId } = await readResources(homedir);
+
+    const getResourcesParams = {
+      restApiId,
+    };
+    
     const namiApiGwResources = await asyncGetResources(getResourcesParams);
 
     const resource = namiApiGwResources.items.find(item => (
@@ -31,6 +30,7 @@ module.exports = async function deleteApiResource(resourceName, homedir) {
     await asyncDeleteResource(deleteResourceParams);
     namiLog(`API endpoint ${resourceName} deleted`);
   } catch (err) {
-    namiErr(err.message);
+    return err.message;
   }
+  return true;
 };

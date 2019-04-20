@@ -2,7 +2,6 @@ const { asyncDeleteQueue } = require('./awsFunctions');
 const getRegion = require('../util/getRegion');
 const { readConfig } = require('../util/fileUtils');
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 module.exports = async function deleteDLQ(resourceName, homedir) {
   const { accountNumber } = await readConfig(homedir);
@@ -17,6 +16,7 @@ module.exports = async function deleteDLQ(resourceName, homedir) {
     await asyncDeleteQueue(deleteQueueParams);
     namiLog(`${resourceName}DLQ deleted`);
   } catch (err) {
-    namiErr(`DLQ delete Error => ${err.message}`);
+    return err.message;
   }
+  return true;
 };

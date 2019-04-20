@@ -2,7 +2,6 @@ const { asyncDeleteQueue } = require('./awsFunctions');
 const getRegion = require('../util/getRegion');
 const { readConfig } = require('../util/fileUtils');
 const namiLog = require('../util/logger');
-const namiErr = require('../util/errorLogger');
 
 module.exports = async function deleteSQS(resourceName, homedir) {
   const { accountNumber } = await readConfig(homedir);
@@ -17,6 +16,7 @@ module.exports = async function deleteSQS(resourceName, homedir) {
     await asyncDeleteQueue(deleteQueueParams);
     namiLog(`${resourceName}SQS deleted`);
   } catch (err) {
-    namiErr(`Delete Queue Error => ${err.message}`);
+    return err.message;
   }
+  return true;
 };
