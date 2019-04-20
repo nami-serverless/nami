@@ -2,6 +2,7 @@ const create = require('./create');
 const deploy = require('./deploy');
 const destroy = require('./destroy');
 const list = require('./list');
+const help = require('./help');
 const namiErr = require('../util/errorLogger');
 
 module.exports = async function executeCommand(command, resourceName, homedir) {
@@ -13,6 +14,8 @@ module.exports = async function executeCommand(command, resourceName, homedir) {
     await destroy(resourceName, homedir);
   } else if (command === 'list') {
     await list(homedir);
+  } else if (command === 'help') {
+    help();
   } else {
     namiErr(`Command: ${command} is not valid.`);
   }
