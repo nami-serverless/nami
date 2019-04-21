@@ -1,5 +1,5 @@
 {
-  "name": "nami",
+  "name": "nami-serverless",
   "version": "1.0.0",
   "description": "Serverless framework to consume webhooks at scale",
   "main": "index.js",
