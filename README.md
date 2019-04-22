@@ -100,7 +100,7 @@ Webhook providers generally do not guarantee delivery of events in the order in 
 
 ### Security and SSH
 
-To conform to security best practices, the post-queue Lambda function and EC2 instance are both within their own security group to limit outside access. Users can access their own AWS EC2 instances using SSH, however, TCP port 22 is closed by default when users deploy instances of Nami. This can be opened by the user either by using the `authorize-security-group-ingress` [aws cli command](https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html), or by editing the inbound rules for the `<resourceName>EC2SecurityGroup` to allow SSH connections from your desired source.
+To ensure that the data store is not accessible from the public internet, the post-queue Lambda function and EC2 instance are both within their own Virtual Private Cloud (VPC) and security group. Users can access their own AWS EC2 instances using SSH, however, TCP port 22 is closed by default when users deploy instances of Nami. This can be opened by the user either by using the `authorize-security-group-ingress` [aws cli command](https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html), or by editing the inbound rules for the `<resourceName>EC2SecurityGroup` to allow SSH connections from your desired source.
 
 ![Security Diagram](https://i.imgur.com/Lo7dYMo.png)
 
