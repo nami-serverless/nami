@@ -12,7 +12,7 @@ The Nami framework accommodates a large wave of webhooks using AWS Lambda Functi
 
 ### Nami Architecture
 
-![Nami components](https://i.imgur.com/rSj8dkE.png)
+![Nami components](https://i.imgur.com/FEghmSi.png)
 
 ## The Team
 **[Sachin Chandy](https://sachinmc.github.io)** *Software Engineer* London, UK
