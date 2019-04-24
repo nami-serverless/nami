@@ -36,13 +36,11 @@ module.exports = async function deployEC2(resourceName, homedir) {
 
     if (!pemFileExists) {
       const sourceFile = `${namiPath}/nami.pem`;
-      //console.log(sourceFile, destinationFile);
       await copyFile(sourceFile, destinationFile);
       namiLog(keyLogMessageOne);
       namiLog(keyLogMessageTwo);
     }
   } catch (err) {
-    //console.log('am in the catch block');
     namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
     await changePermissionsOnKeyPairFile(homedir, namiKeyPair);

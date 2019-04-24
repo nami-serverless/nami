@@ -9,7 +9,7 @@ module.exports = async function deleteApiResource(resourceName, homedir) {
     const getResourcesParams = {
       restApiId,
     };
-    
+
     const namiApiGwResources = await asyncGetResources(getResourcesParams);
 
     const resource = namiApiGwResources.items.find(item => (
