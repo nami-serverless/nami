@@ -26,20 +26,28 @@ const KeyName = 'nami';
 
 module.exports = async function deployEC2(resourceName, homedir) {
   let namiKeyPair;
+  const keyLogMessageOne = 'nami.pem private key has been saved in your current directory';
+  const keyLogMessageTwo = 'You will need it for SSH connections to any Nami EC2 instance';
 
   try {
     await asyncDescribeKeyPairs({ KeyNames: [`${KeyName}`] });
     const destinationFile = `${process.cwd()}/nami.pem`;
     const pemFileExists = await exists(destinationFile);
-    
+
     if (!pemFileExists) {
       const sourceFile = `${namiPath}/nami.pem`;
+      //console.log(sourceFile, destinationFile);
       await copyFile(sourceFile, destinationFile);
+      namiLog(keyLogMessageOne);
+      namiLog(keyLogMessageTwo);
     }
   } catch (err) {
+    //console.log('am in the catch block');
     namiKeyPair = await asyncCreateKeyPair({ KeyName });
     await createKeyPairFile(homedir, namiKeyPair);
     await changePermissionsOnKeyPairFile(homedir, namiKeyPair);
+    namiLog(keyLogMessageOne);
+    namiLog(keyLogMessageTwo);
   }
 
   const data = await readFile(`${namiPath}/docker_mongo_setup.sh`);
