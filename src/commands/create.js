@@ -14,14 +14,14 @@ module.exports = async function create(resourceName) {
 
   if (!preLambdaDirectoryExists) {
     await writeTemplateLocally(preLambdaName, preLambdaTemplate);
-    namiLog(`Your lambda template ${preLambdaName} is in ${process.cwd()}`);
+    namiLog(`./${preLambdaName} has been created`);
   } else {
     namiLog(`Directory ${preLambdaName} already exists`);
   }
 
   if (!postLambdaDirectoryExists) {
     await writeTemplateLocally(postLambdaName, postLambdaTemplate);
-    namiLog(`Your lambda template ${postLambdaName} is in ${process.cwd()}`);
+    namiLog(`./${postLambdaName} has been created`);
   } else {
     namiLog(`Directory ${postLambdaName} already exists`);
   }
