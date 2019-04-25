@@ -28,7 +28,7 @@ module.exports = async function list(homedir) {
     let endpoint;
     const region = getRegion();
 
-    if (namiApiGwResources.items.length === 0) {
+    if (namiApiGwResources.items.length === 1) {
       namiErr(noActiveEndpointError);
     } else {
       namiLog('Your resources are:');
