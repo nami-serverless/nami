@@ -69,6 +69,7 @@ describe('nami deploy SQS', () => {
     }
 
     const messages = await asyncReceiveMessage({ QueueUrl, MaxNumberOfMessages: 1 });
+    await sleep(2000);
     const messageBody = messages.Messages[0].Body;
     const messageContainsPayload = RegExp('webhook test message').test(messageBody);
 
