@@ -19,7 +19,7 @@ The Nami framework accommodates a large wave of webhooks using AWS Lambda Functi
 
 **[Wendy Kuhn](https://wendykuhn.io)** *Software Engineer* Austin, TX
 
-**[Nick Miller](https://nickmiller11.github.io)** *Software Engineer* Los Angeles, CA
+**[Nick Miller](https://nickmiller.io)** *Software Engineer* Los Angeles, CA
 
 ## Getting Started
 
