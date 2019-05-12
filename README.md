@@ -1,5 +1,10 @@
 ![Nami Header](https://i.imgur.com/WI3bJSx.png)
 
+[![nami](https://img.shields.io/badge/nami-case%20study-33c5ff.svg?color=33c5ff&style=plastic)](https://nami-serverless.github.io)
+[![npm](https://img.shields.io/npm/v/nami-serverless.svg?color=33c5ff&style=plastic)](https://www.npmjs.com/package/nami-serverless)
+[![license](https://img.shields.io/npm/l/nami-serverless.svg?color=33c5ff&style=plastic)](https://www.npmjs.com/package/nami-serverless)
+
+
 ## Overview
 
 Nami is a serverless framework for consuming webhooks at scale.
