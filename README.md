@@ -46,17 +46,17 @@ npm install -g nami-serverless
 
 Nami commands conform to the following structure:
 ```
-nami <commandName> [<resourceName>]
+nami <commandName> [<name>]
 ```
 
 ---
 
-#### `nami create <resourceName>`
+#### `nami create <name>`
 *optional: create local directories and files for pre-queue and post-queue Lambda functions for user to insert custom logic before deploying*
 
 ---
 
-#### `nami deploy <resourceName>`
+#### `nami deploy <name>`
 *deploy API endpoint and accompanying scalable architecture. User can register endpoint with the webhook provider*
 
 The `deploy` command will create instances of the below:
@@ -72,7 +72,7 @@ The first time the `deploy` command is run, Nami will also create:
 
 ---
 
-#### `nami destroy <resourceName>`
+#### `nami destroy <name>`
 *delete API endpoint and accompanying scalable architecture*
 
 All instances of AWS services for a particular endpoint will be deleted, except for the Elastic Block Storage (EBS) volume that persists any webhook data written to the MongoDB database.
@@ -105,7 +105,7 @@ Webhook providers generally do not guarantee delivery of events in the order in 
 
 ### Security and SSH
 
-To ensure that the data store is not accessible from the public internet, the post-queue Lambda function and EC2 instance are both within their own Virtual Private Cloud (VPC) and the EC2 instance allows inbound access only from the post-queue Lambda security group. Users can access their own AWS EC2 instances using SSH, however, TCP port 22 is closed by default when users deploy instances of Nami. This can be opened by the user either by using the `authorize-security-group-ingress` [aws cli command](https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html), or by editing the inbound rules for the `<resourceName>EC2SecurityGroup` to allow SSH connections from your desired source.
+To ensure that the data store is not accessible from the public internet, the post-queue Lambda function and EC2 instance are both within their own Virtual Private Cloud (VPC) and the EC2 instance allows inbound access only from the post-queue Lambda security group. Users can access their own AWS EC2 instances using SSH, however, TCP port 22 is closed by default when users deploy instances of Nami. This can be opened by the user either by using the `authorize-security-group-ingress` [aws cli command](https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html), or by editing the inbound rules for the `<name>EC2SecurityGroup` to allow SSH connections from your desired source.
 
 ![Security Diagram](https://i.imgur.com/Lo7dYMo.png)
 
