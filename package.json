@@ -1,6 +1,6 @@
 {
   "name": "nami-serverless",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Serverless framework to consume webhooks at scale",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
     },
     {
       "name": "Nick Miller",
-      "email": "nick.miller00@gmail.com"
+      "email": "n@nickmiller.io"
     }
   ],
   "license": "MIT",
