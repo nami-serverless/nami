@@ -48,7 +48,7 @@ module.exports = async function deployPostLambda(
     FunctionName: `${lambdaName}`,
     Handler: `${lambdaName}.handler`,
     Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
-    Runtime: 'nodejs8.10',
+    Runtime: 'nodejs12.x',
     Description: `${lambdaDesc}`,
     VpcConfig: {
       SecurityGroupIds: [SecurityGroupId],

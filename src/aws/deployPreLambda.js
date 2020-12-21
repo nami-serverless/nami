@@ -34,7 +34,7 @@ module.exports = async function deployPreLambda(resourceName, homedir) {
     Handler: `${lambdaName}.handler`,
     MemorySize: 256,
     Role: `arn:aws:iam::${accountNumber}:role/${lambdaRoleName}`,
-    Runtime: 'nodejs8.10',
+    Runtime: 'nodejs12.x',
     Description: `${lambdaDesc}`,
     Tags: {
       Nami: `${lambdaName}`,
